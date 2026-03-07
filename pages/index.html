@@ -39,10 +39,7 @@
                     </div>
                     
                     <!-- Actions -->
-                    <div class="nav-actions" style="display: flex; align-items: center; gap: 15px;">
-                        <!-- Global Search -->
-                        <div class="global-search-wrapper" id="global-search-container">
-                            <divflex items-center gap-3">
+                    <div class="flex items-center gap-3">
                         <!-- Search -->
                         <div class="search-container" id="search-container">
                             <div class="search-input-wrapper">
@@ -64,7 +61,10 @@
                         
                         <!-- Auth Buttons -->
                         <button id="auth-btn" onclick="showAuth()" class="hidden sm:block btn-primary px-4 py-2 rounded-lg font-semibold text-sm">CONNEXION</button>
-                        <button id="profile-btn" onclick="showProfile()" class="hidden sm:block btn-primary px-4 py-2 rounded-lg font-semibold text-sm hidden">Profil</buttonle Menu Button -->
+                        <button id="profile-btn" onclick="showProfile()" class="hidden sm:block btn-primary px-4 py-2 rounded-lg font-semibold text-sm hidden">Profil</button>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
                     <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-400 hover:text-white" onclick="toggleMobileMenu(event)">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
