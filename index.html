@@ -2,10 +2,50 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=pages/index.html">
-    <title>Exon Store - Redirection</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exon Store</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .loader {
+            text-align: center;
+        }
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            border-top: 3px solid #fff;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <script>
+        // Fallback redirect if Netlify rewrite doesn't work
+        setTimeout(() => {
+            if (window.location.pathname === '/index.html') {
+                window.location.href = '/pages/index.html';
+            }
+        }, 1000);
+    </script>
 </head>
 <body>
-    <p>Redirection vers <a href="pages/index.html">Exon Store</a>...</p>
+    <div class="loader">
+        <div class="spinner"></div>
+        <p>Chargement...</p>
+    </div>
 </body>
 </html>

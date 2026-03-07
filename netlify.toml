@@ -17,39 +17,49 @@
 [[redirects]]
   from = "/"
   to = "/pages/index.html"
-  status = 301
+  status = 200
 
 [[redirects]]
   from = "/home.html"
   to = "/pages/index.html"
-  status = 301
+  status = 200
 
 [[redirects]]
   from = "/about.html"
   to = "/pages/about.html"
-  status = 301
+  status = 200
 
 [[redirects]]
   from = "/cars.html"
   to = "/pages/cars.html"
-  status = 301
+  status = 200
 
 [[redirects]]
   from = "/clothes.html"
   to = "/pages/clothes.html"
-  status = 301
+  status = 200
 
 [[redirects]]
   from = "/scripts.html"
   to = "/pages/scripts.html"
-  status = 301
+  status = 200
 
 [[redirects]]
   from = "/templates.html"
   to = "/pages/templates.html"
-  status = 301
+  status = 200
 
 [[redirects]]
   from = "/admin.html"
   to = "/pages/admin.html"
-  status = 301
+  status = 200
+
+[[redirects]]
+  from = "/cart.html"
+  to = "/pages/cart.html"
+  status = 200
+
+[[redirects]]
+  from = "/product-detail.html"
+  to = "/pages/product-detail.html"
+  status = 200
