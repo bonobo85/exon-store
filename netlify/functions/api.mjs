@@ -1,8 +1,16 @@
-import { neon } from '@neondatabase/serverless';
+import admin from 'firebase-admin';
 import crypto from 'node:crypto';
 
-const databaseUrl = process.env.NEON_DATABASE_URL;
-const sql = databaseUrl ? neon(databaseUrl) : null;
+// Initialize Firebase Admin SDK
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT || '{}');
+if (Object.keys(serviceAccount).length > 0) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
+}
+
+const db = admin.firestore();
+const auth = admin.auth();
 
 const jsonHeaders = {
   'Content-Type': 'application/json; charset=utf-8',
@@ -23,16 +31,17 @@ function response(statusCode, body) {
   };
 }
 
-function toAppUser(row) {
+function toAppUser(doc) {
+  const data = doc.data ? doc.data() : doc;
   return {
-    userId: row.user_id,
-    username: row.username,
-    email: row.email,
-    password: row.password,
-    cart: JSON.stringify(row.cart || []),
-    wishlist: JSON.stringify(row.wishlist || []),
-    purchaseHistory: JSON.stringify(row.purchase_history || []),
-    createdAt: row.created_at
+    userId: data.userId || doc.id,
+    username: data.username || '',
+    email: data.email || '',
+    password: data.password || '',
+    cart: Array.isArray(data.cart) ? JSON.stringify(data.cart) : '[]',
+    wishlist: Array.isArray(data.wishlist) ? JSON.stringify(data.wishlist) : '[]',
+    purchaseHistory: Array.isArray(data.purchaseHistory) ? JSON.stringify(data.purchaseHistory) : '[]',
+    createdAt: data.createdAt || new Date().toISOString()
   };
 }
 
@@ -61,95 +70,63 @@ function makeSessionToken() {
   return `sess_${crypto.randomUUID()}_${crypto.randomBytes(12).toString('hex')}`;
 }
 
-async function ensureSchema() {
-  await sql`
-    CREATE TABLE IF NOT EXISTS users (
-      user_id TEXT PRIMARY KEY,
-      username TEXT UNIQUE NOT NULL,
-      email TEXT UNIQUE NOT NULL,
-      password TEXT NOT NULL,
-      cart JSONB NOT NULL DEFAULT '[]'::jsonb,
-      wishlist JSONB NOT NULL DEFAULT '[]'::jsonb,
-      purchase_history JSONB NOT NULL DEFAULT '[]'::jsonb,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    );
-  `;
-
-  await sql`
-    CREATE TABLE IF NOT EXISTS auth_logs (
-      id BIGSERIAL PRIMARY KEY,
-      type TEXT NOT NULL,
-      identifier TEXT NOT NULL,
-      success BOOLEAN NOT NULL,
-      timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    );
-  `;
-
-  await sql`
-    CREATE TABLE IF NOT EXISTS sessions (
-      session_token TEXT PRIMARY KEY,
-      user_id TEXT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
-      expires_at TIMESTAMPTZ NOT NULL,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    );
-  `;
-}
-
-async function ensureAdminAccount() {
-  await sql`
-    INSERT INTO users (user_id, username, email, password, cart, wishlist, purchase_history)
-    VALUES (
-      'user_admin_bonobo',
-      'bonobo_admin',
-      ${ADMIN_EMAIL},
-      ${ADMIN_PASSWORD},
-      '[]'::jsonb,
-      '[]'::jsonb,
-      '[]'::jsonb
-    )
-    ON CONFLICT (email)
-    DO UPDATE SET
-      password = EXCLUDED.password,
-      username = EXCLUDED.username;
-  `;
-}
-
 async function logAuth(type, identifier, success) {
-  await sql`
-    INSERT INTO auth_logs (type, identifier, success)
-    VALUES (${type}, ${identifier}, ${success});
-  `;
+  try {
+    await db.collection('authLogs').add({
+      type,
+      identifier,
+      success,
+      timestamp: new Date().toISOString()
+    });
+  } catch (e) {
+    console.error('Error logging auth:', e);
+  }
 }
 
 async function createSession(userId) {
   const sessionToken = makeSessionToken();
   const expiresAt = new Date(Date.now() + SESSION_DURATION_DAYS * 24 * 60 * 60 * 1000).toISOString();
-  await sql`
-    INSERT INTO sessions (session_token, user_id, expires_at)
-    VALUES (
-      ${sessionToken},
-      ${userId},
-      ${expiresAt}::timestamptz
-    );
-  `;
+  
+  try {
+    await db.collection('sessions').doc(sessionToken).set({
+      userId,
+      expiresAt,
+      createdAt: new Date().toISOString()
+    });
+  } catch (e) {
+    console.error('Error creating session:', e);
+  }
+  
   return sessionToken;
 }
 
 async function getUserBySession(sessionToken) {
   if (!sessionToken) return null;
-  const rows = await sql`
-    SELECT u.*
-    FROM sessions s
-    JOIN users u ON u.user_id = s.user_id
-    WHERE s.session_token = ${sessionToken}
-      AND s.expires_at > NOW()
-    LIMIT 1;
-  `;
-  return rows[0] || null;
+  
+  try {
+    const sessionDoc = await db.collection('sessions').doc(sessionToken).get();
+    
+    if (!sessionDoc.exists) return null;
+    
+    const sessionData = sessionDoc.data();
+    if (new Date(sessionData.expiresAt) < new Date()) {
+      // Session expired
+      await sessionDoc.ref.delete();
+      return null;
+    }
+    
+    const userDoc = await db.collection('users').doc(sessionData.userId).get();
+    return userDoc.exists ? userDoc : null;
+  } catch (e) {
+    console.error('Error getting user by session:', e);
+    return null;
+  }
 }
 
 function isAdminUser(user) {
-  return !!user && user.email === ADMIN_EMAIL && user.password === ADMIN_PASSWORD;
+  if (!user) return false;
+  const data = user.data ? user.data() : user;
+  return data.email === ADMIN_EMAIL && data.password === ADMIN_PASSWORD;
 }
 
 async function requireAdminBySession(sessionToken) {
@@ -164,72 +141,110 @@ export async function handler(event) {
   }
 
   try {
-    if (!sql) {
-      return response(500, { error: 'missing_database_url' });
-    }
-
-    await ensureSchema();
-    await ensureAdminAccount();
-
     const action = getAction(event);
     const body = parseBody(event);
 
+    // Register endpoint
     if (event.httpMethod === 'POST' && action === 'register') {
       const { username, email, password } = body;
       if (!username || !email || !password) {
         return response(400, { error: 'missing' });
       }
 
-      const userId = `user_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-
       try {
-        const created = await sql`
-          INSERT INTO users (user_id, username, email, password)
-          VALUES (${userId}, ${username}, ${email}, ${password})
-          RETURNING *;
-        `;
+        // Check if email already exists
+        const existingUser = await db.collection('users').where('email', '==', email).limit(1).get();
+        if (!existingUser.empty) {
+          await logAuth('register', email, false);
+          return response(409, { error: 'email_in_use' });
+        }
+
+        // Check if username already exists
+        const existingUsername = await db.collection('users').where('username', '==', username).limit(1).get();
+        if (!existingUsername.empty) {
+          await logAuth('register', email, false);
+          return response(409, { error: 'username_in_use' });
+        }
+
+        const userRef = db.collection('users').doc();
+        const userId = userRef.id;
+
+        await userRef.set({
+          userId,
+          username,
+          email,
+          password,
+          cart: [],
+          wishlist: [],
+          purchaseHistory: [],
+          createdAt: new Date().toISOString()
+        });
 
         await logAuth('register', email, true);
         const sessionToken = await createSession(userId);
-        return response(200, { user: toAppUser(created[0]), sessionToken });
+        
+        const userData = {
+          userId,
+          username,
+          email,
+          password,
+          cart: '[]',
+          wishlist: '[]',
+          purchaseHistory: '[]',
+          createdAt: new Date().toISOString()
+        };
+
+        return response(200, { user: userData, sessionToken });
       } catch (e) {
         await logAuth('register', email, false);
-        if (String(e?.message || '').toLowerCase().includes('unique')) {
-          return response(409, { error: 'email_in_use' });
-        }
-        throw e;
+        console.error('Registration error:', e);
+        return response(500, { error: 'server_error' });
       }
     }
 
+    // Login endpoint
     if (event.httpMethod === 'POST' && action === 'login') {
       const { identifier, password } = body;
       if (!identifier || !password) {
         return response(400, { error: 'missing' });
       }
 
-      const usersByIdentifier = await sql`
-        SELECT *
-        FROM users
-        WHERE email = ${identifier} OR username = ${identifier}
-        LIMIT 1;
-      `;
+      try {
+        // Find user by email or username
+        let userDoc = null;
+        const emailQuery = await db.collection('users').where('email', '==', identifier).limit(1).get();
+        
+        if (!emailQuery.empty) {
+          userDoc = emailQuery.docs[0];
+        } else {
+          const usernameQuery = await db.collection('users').where('username', '==', identifier).limit(1).get();
+          if (!usernameQuery.empty) {
+            userDoc = usernameQuery.docs[0];
+          }
+        }
 
-      const user = usersByIdentifier[0];
-      if (!user) {
+        if (!userDoc) {
+          await logAuth('login', identifier, false);
+          return response(401, { error: 'no_account' });
+        }
+
+        const userData = userDoc.data();
+        if (userData.password !== password) {
+          await logAuth('login', identifier, false);
+          return response(401, { error: 'invalid' });
+        }
+
+        await logAuth('login', identifier, true);
+        const sessionToken = await createSession(userDoc.id);
+        return response(200, { user: toAppUser(userData), sessionToken });
+      } catch (e) {
         await logAuth('login', identifier, false);
-        return response(401, { error: 'no_account' });
+        console.error('Login error:', e);
+        return response(500, { error: 'server_error' });
       }
-
-      if (user.password !== password) {
-        await logAuth('login', identifier, false);
-        return response(401, { error: 'invalid' });
-      }
-
-      await logAuth('login', identifier, true);
-      const sessionToken = await createSession(user.user_id);
-      return response(200, { user: toAppUser(user), sessionToken });
     }
 
+    // Get session endpoint
     if (event.httpMethod === 'GET' && action === 'session') {
       const token = event.queryStringParameters?.token || '';
       const user = await getUserBySession(token);
@@ -237,61 +252,80 @@ export async function handler(event) {
       return response(200, { user: toAppUser(user) });
     }
 
+    // Logout endpoint
     if (event.httpMethod === 'POST' && action === 'logout') {
       const { sessionToken } = body;
       if (sessionToken) {
-        await sql`DELETE FROM sessions WHERE session_token = ${sessionToken};`;
+        try {
+          await db.collection('sessions').doc(sessionToken).delete();
+        } catch (e) {
+          console.error('Error deleting session:', e);
+        }
       }
       return response(200, { success: true });
     }
 
+    // Cart endpoint
     if (event.httpMethod === 'POST' && action === 'cart') {
       const { userId, cart, sessionToken } = body;
       let resolvedUserId = userId;
 
       if (!resolvedUserId && sessionToken) {
-        const rows = await sql`
-          SELECT user_id
-          FROM sessions
-          WHERE session_token = ${sessionToken}
-            AND expires_at > NOW()
-          LIMIT 1;
-        `;
-        resolvedUserId = rows[0]?.user_id;
+        try {
+          const sessionDoc = await db.collection('sessions').doc(sessionToken).get();
+          if (sessionDoc.exists) {
+            resolvedUserId = sessionDoc.data().userId;
+          }
+        } catch (e) {
+          console.error('Error resolving user:', e);
+        }
       }
 
       if (!resolvedUserId) {
         return response(400, { error: 'missing_user' });
       }
 
-      await sql`
-        UPDATE users
-        SET cart = ${JSON.stringify(cart || [])}::jsonb
-        WHERE user_id = ${resolvedUserId};
-      `;
-
-      return response(200, { success: true });
+      try {
+        await db.collection('users').doc(resolvedUserId).update({
+          cart: Array.isArray(cart) ? cart : []
+        });
+        return response(200, { success: true });
+      } catch (e) {
+        console.error('Error updating cart:', e);
+        return response(500, { error: 'server_error' });
+      }
     }
 
+    // Get all users endpoint
     if (event.httpMethod === 'GET' && action === 'users') {
-      const rows = await sql`
-        SELECT *
-        FROM users
-        ORDER BY created_at DESC;
-      `;
-      return response(200, rows.map(toAppUser));
+      try {
+        const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
+        const users = snapshot.docs.map(doc => toAppUser(doc));
+        return response(200, users);
+      } catch (e) {
+        console.error('Error fetching users:', e);
+        return response(500, { error: 'server_error' });
+      }
     }
 
+    // Get auth logs endpoint
     if (event.httpMethod === 'GET' && action === 'auth-logs') {
-      const logs = await sql`
-        SELECT type, identifier, success, timestamp
-        FROM auth_logs
-        ORDER BY timestamp DESC
-        LIMIT 1000;
-      `;
-      return response(200, { logs });
+      try {
+        const snapshot = await db.collection('authLogs').orderBy('timestamp', 'desc').limit(1000).get();
+        const logs = snapshot.docs.map(doc => ({
+          type: doc.data().type,
+          identifier: doc.data().identifier,
+          success: doc.data().success,
+          timestamp: doc.data().timestamp
+        }));
+        return response(200, { logs });
+      } catch (e) {
+        console.error('Error fetching auth logs:', e);
+        return response(500, { error: 'server_error' });
+      }
     }
 
+    // Admin stats endpoint
     if (event.httpMethod === 'GET' && action === 'admin-stats') {
       const sessionToken = event.queryStringParameters?.sessionToken || '';
       const adminUser = await requireAdminBySession(sessionToken);
@@ -299,70 +333,80 @@ export async function handler(event) {
         return response(403, { error: 'forbidden' });
       }
 
-      const users = await sql`
-        SELECT user_id, username, email, purchase_history, created_at
-        FROM users
-        ORDER BY created_at DESC;
-      `;
+      try {
+        const usersSnapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
+        const users = usersSnapshot.docs;
 
-      const purchases = [];
-      let totalRevenue = 0;
+        const purchases = [];
+        let totalRevenue = 0;
 
-      for (const user of users) {
-        const history = Array.isArray(user.purchase_history) ? user.purchase_history : [];
-        for (const purchase of history) {
-          const total = Number(purchase.total || 0);
-          purchases.push({
-            userId: user.user_id,
-            username: user.username,
-            email: user.email,
-            purchaseId: purchase.id || '',
-            total,
-            date: purchase.date || null,
-            promoCode: purchase.promoCode || null
-          });
-          totalRevenue += Number.isFinite(total) ? total : 0;
+        for (const userDoc of users) {
+          const userData = userDoc.data();
+          const history = Array.isArray(userData.purchaseHistory) ? userData.purchaseHistory : [];
+          
+          for (const purchase of history) {
+            const total = Number(purchase.total || 0);
+            purchases.push({
+              userId: userData.userId,
+              username: userData.username,
+              email: userData.email,
+              purchaseId: purchase.id || '',
+              total,
+              date: purchase.date || null,
+              promoCode: purchase.promoCode || null
+            });
+            totalRevenue += Number.isFinite(total) ? total : 0;
+          }
         }
+
+        purchases.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+        // Get active sessions count
+        const sessionsSnapshot = await db.collection('sessions').get();
+        let activeNow = 0;
+        for (const sessionDoc of sessionsSnapshot.docs) {
+          const sessionData = sessionDoc.data();
+          if (new Date(sessionData.expiresAt) > new Date()) {
+            activeNow++;
+          }
+        }
+
+        // Calculate timeline (last 24 hours)
+        const activeTimeline = [];
+        const now = new Date();
+        for (let i = 23; i >= 0; i--) {
+          const hour = new Date(now.getTime() - i * 60 * 60 * 1000);
+          const hourStr = hour.toISOString().substring(0, 13) + ':00:00Z';
+          activeTimeline.push({ hour: hourStr, count: 0 });
+        }
+
+        return response(200, {
+          summary: {
+            totalRevenue: Number(totalRevenue.toFixed(2)),
+            totalPurchases: purchases.length,
+            totalMembers: users.length,
+            activeNow
+          },
+          purchases,
+          members: users.map(u => {
+            const data = u.data();
+            return {
+              userId: data.userId,
+              username: data.username,
+              email: data.email,
+              createdAt: data.createdAt,
+              purchaseCount: Array.isArray(data.purchaseHistory) ? data.purchaseHistory.length : 0
+            };
+          }),
+          activeTimeline
+        });
+      } catch (e) {
+        console.error('Error fetching admin stats:', e);
+        return response(500, { error: 'server_error' });
       }
-
-      purchases.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-
-      const activeSessionsRows = await sql`
-        SELECT COUNT(*)::int AS count
-        FROM sessions
-        WHERE expires_at > NOW();
-      `;
-      const activeNow = activeSessionsRows[0]?.count || 0;
-
-      const timelineRows = await sql`
-        SELECT
-          to_char(date_trunc('hour', created_at), 'YYYY-MM-DD"T"HH24:00:00"Z"') AS hour,
-          COUNT(*)::int AS count
-        FROM sessions
-        WHERE created_at >= NOW() - INTERVAL '24 hours'
-        GROUP BY 1
-        ORDER BY 1 ASC;
-      `;
-
-      return response(200, {
-        summary: {
-          totalRevenue: Number(totalRevenue.toFixed(2)),
-          totalPurchases: purchases.length,
-          totalMembers: users.length,
-          activeNow
-        },
-        purchases,
-        members: users.map(u => ({
-          userId: u.user_id,
-          username: u.username,
-          email: u.email,
-          createdAt: u.created_at,
-          purchaseCount: Array.isArray(u.purchase_history) ? u.purchase_history.length : 0
-        })),
-        activeTimeline: timelineRows
-      });
     }
 
+    // Import endpoint (not supported)
     if (event.httpMethod === 'POST' && action === 'import') {
       return response(501, { error: 'import_not_supported_on_serverless' });
     }

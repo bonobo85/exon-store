@@ -2,6 +2,6 @@
   "name": "bonobo-shopv2",
   "private": true,
   "dependencies": {
-    "@neondatabase/serverless": "^0.10.0"
+    "firebase-admin": "^12.0.0"
   }
 }
