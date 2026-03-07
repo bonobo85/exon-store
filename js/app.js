@@ -82,7 +82,7 @@ function ensureModalShell(modalId, markup) {
         forceRefreshMarkup ||
         !modal.innerHTML ||
         modal.innerHTML.trim() === '' ||
-        modal.innerHTML.includes('meme contenu') ||
+        modal.innerHTML.includes('même contenu') ||
         modal.innerHTML.includes('mme contenu') ||
         modal.innerHTML.includes('same content')
     ) {
@@ -98,12 +98,12 @@ function ensureCommerceUI() {
                     <p class="auth-kicker">Espace membre</p>
                     <h2 class="font-display text-2xl font-bold text-white">Connexion / Inscription</h2>
                 </div>
-                <button onclick="closeModal('auth-modal')" class="auth-close-btn" aria-label="Fermer la fenetre d'authentification">X</button>
+                <button onclick="closeModal('auth-modal')" class="auth-close-btn" aria-label="Fermer la fenêtre d'authentification">X</button>
             </div>
             <div class="modal-body auth-modal-body">
                 <div class="auth-modal-hero">
                     <p class="auth-hero-title">Rejoins Exon Store</p>
-                    <p class="auth-hero-subtitle">Accede a ton profil, ton historique et finalise tes commandes en un clic.</p>
+                    <p class="auth-hero-subtitle">Accède à ton profil, ton historique et finalise tes commandes en un clic.</p>
                 </div>
                 <div class="tabs auth-tabs">
                     <button class="tab-btn auth-tab-btn active" data-tab="login" onclick="switchTab('login')">Connexion</button>
@@ -328,14 +328,14 @@ function renderPaymentMethods() {
 
     const methods = getUserPaymentMethods();
     if (methods.length === 0) {
-        container.innerHTML = '<p class="text-gray-400 text-center py-8">Aucun moyen de paiement enregistre</p>';
+        container.innerHTML = '<p class="text-gray-400 text-center py-8">Aucun moyen de paiement enregistré</p>';
         return;
     }
 
     container.innerHTML = methods.map(method => `
         <div class="p-4 rounded-lg bg-white/5 border border-white/10">
             <p class="text-white font-semibold">${method.label}</p>
-            <p class="text-gray-400 text-sm">${method.lastUsed ? 'Derniere utilisation: ' + new Date(method.lastUsed).toLocaleDateString('fr-FR') : 'Moyen disponible pour vos prochaines commandes'}</p>
+            <p class="text-gray-400 text-sm">${method.lastUsed ? 'Dernière utilisation: ' + new Date(method.lastUsed).toLocaleDateString('fr-FR') : 'Moyen disponible pour vos prochaines commandes'}</p>
         </div>
     `).join('');
 }
@@ -968,7 +968,7 @@ function applyPromo() {
 
     if (promoCodes[code]) {
         currentPromo = { code, discount: promoCodes[code] };
-        messageDiv.innerHTML = `<div class="success-message">Code promo applique ! ${Math.round(promoCodes[code] * 100)}% de réduction</div>`;
+        messageDiv.innerHTML = `<div class="success-message">Code promo appliqué ! ${Math.round(promoCodes[code] * 100)}% de réduction</div>`;
         calculateTotals();
     } else {
         messageDiv.innerHTML = '<div class="error-message">Code promo invalide</div>';
