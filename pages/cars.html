@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -95,8 +95,8 @@
                 <div class="absolute inset-0 grid-pattern opacity-30"></div>
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div class="text-center mb-12">
-                        <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-4">NOS VÉHICULES</h2>
-                        <p class="text-gray-400 max-w-2xl mx-auto">Découvrez notre collection exclusive de modèles de voitures pour FiveM</p>
+                        <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-4">NOS VÃ‰HICULES</h2>
+                        <p class="text-gray-400 max-w-2xl mx-auto">DÃ©couvrez notre collection exclusive de modÃ¨les de voitures pour FiveM</p>
                     </div>
                     <div class="mb-8">
                         <div id="cars-category-nav" class="flex flex-wrap items-center justify-center gap-2 md:gap-3">
@@ -186,7 +186,7 @@
                         <div class="flex items-center gap-3 mb-4">
                             <span class="font-display text-xl font-bold text-white">EXON</span>
                         </div>
-                        <p class="text-gray-400 text-sm max-w-md">Votre source de confiance pour des ressources FiveM de haute qualité. Scripts, vêtements et templates pour créer le serveur parfait.</p>
+                        <p class="text-gray-400 text-sm max-w-md">Votre source de confiance pour des ressources FiveM de haute qualitÃ©. Scripts, vÃªtements et templates pour crÃ©er le serveur parfait.</p>
                     </div>
                     
                     <!-- Links -->
@@ -214,7 +214,7 @@
                 </div>
                 
                 <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <p class="text-gray-500 text-sm">© 2026 Exon. Tous droits réservés.</p>
+                    <p class="text-gray-500 text-sm">Â© 2026 Exon. Tous droits rÃ©servÃ©s.</p>
                     <div class="flex items-center gap-4">
                         <a href="https://discord.com/invite/c9cKtrwMrs" target="_blank" rel="noopener noreferrer" class="text-[#5865F2] hover:text-[#7B86FF] transition-colors">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -358,7 +358,7 @@
                         <div id="promo-message"></div>
                     </div>
                     <div id="discount-line" class="flex justify-between mb-2 hidden">
-                        <span class="text-gray-400">réduction:</span>
+                        <span class="text-gray-400">rÃ©duction:</span>
                         <span id="discount-amount" class="text-green-400 font-semibold">-0.00 EUR</span>
                     </div>
                     <div class="flex justify-between border-t border-white/10 pt-4">
@@ -439,7 +439,7 @@
                             <label class="form-label">Date d'inscription</label>
                             <p class="text-white font-semibold" id="profile-joined">-</p>
                         </div>
-                        <button id="logout-btn" onclick="handleLogout()" class="w-full btn-secondary px-4 py-2 rounded-lg font-semibold mt-6">déconnexion</button>
+                        <button id="logout-btn" onclick="handleLogout()" class="w-full btn-secondary px-4 py-2 rounded-lg font-semibold mt-6">dÃ©connexion</button>
                     </div>
                 </div>
                 
@@ -455,7 +455,7 @@
     <div id="product-modal" class="modal">
         <div class="modal-content max-w-4xl">
             <div class="modal-header">
-                <h2 class="font-display text-2xl font-bold text-white" id="product-modal-title">DÉTAILS DU PRODUIT</h2>
+                <h2 class="font-display text-2xl font-bold text-white" id="product-modal-title">DÃ‰TAILS DU PRODUIT</h2>
                 <button onclick="closeModal('product-modal')" class="text-gray-400 hover:text-white text-2xl leading-none">X</button>
             </div>
             <div class="modal-body">
@@ -532,8 +532,8 @@
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
             let activeCarTag = 'civil';
-            let activePoliceSubcategories = []; // Tableau pour sélection multiple
-            let activeAmbulanceSubcategories = []; // Tableau pour sélection multiple ambulance
+            let activePoliceSubcategories = []; // Tableau pour sÃ©lection multiple
+            let activeAmbulanceSubcategories = []; // Tableau pour sÃ©lection multiple ambulance
             let isPoliceExpanded = false;
             let isAmbulanceExpanded = false;
 
@@ -567,7 +567,7 @@
                         container.classList.remove('closing');
                     }, 300);
                     activePoliceSubcategories = [];
-                    // Désélectionner tous les boutons
+                    // DÃ©sÃ©lectionner tous les boutons
                     const policeButtons = document.querySelectorAll('.police-subcategory-btn');
                     policeButtons.forEach(btn => {
                         btn.classList.remove('bg-blue-500/20', 'border-blue-400', 'text-white');
@@ -592,7 +592,7 @@
                         container.classList.remove('closing');
                     }, 300);
                     activeAmbulanceSubcategories = [];
-                    // Désélectionner tous les boutons
+                    // DÃ©sÃ©lectionner tous les boutons
                     const ambulanceButtons = document.querySelectorAll('.ambulance-subcategory-btn');
                     ambulanceButtons.forEach(btn => {
                         btn.classList.remove('bg-red-500/20', 'border-red-400', 'text-white');
@@ -676,7 +676,7 @@
                             }, 300);
                             isPoliceExpanded = false;
                             activePoliceSubcategories = [];
-                            // Désélectionner tous les boutons
+                            // DÃ©sÃ©lectionner tous les boutons
                             const policeButtons = document.querySelectorAll('.police-subcategory-btn');
                             policeButtons.forEach(btn => {
                                 btn.classList.remove('bg-blue-500/20', 'border-blue-400', 'text-white');
@@ -693,7 +693,7 @@
                             }, 300);
                             isAmbulanceExpanded = false;
                             activeAmbulanceSubcategories = [];
-                            // Désélectionner tous les boutons
+                            // DÃ©sÃ©lectionner tous les boutons
                             const ambulanceButtons = document.querySelectorAll('.ambulance-subcategory-btn');
                             ambulanceButtons.forEach(btn => {
                                 btn.classList.remove('bg-red-500/20', 'border-red-400', 'text-white');
@@ -704,7 +704,7 @@
                         activeCarTag = newTag;
                         updateActiveCarFilterButton();
                         
-                        // Déterminer quelle liste de sous-catégories utiliser
+                        // DÃ©terminer quelle liste de sous-catÃ©gories utiliser
                         let subcatsToUse = [];
                         if (newTag === 'police') {
                             subcatsToUse = activePoliceSubcategories;
@@ -738,21 +738,21 @@
                     const subcategoryValue = this.dataset.policeSubcategory;
                     const index = activePoliceSubcategories.indexOf(subcategoryValue);
                     
-                    // Toggle: si déjà sélectionné, on désélectionne
+                    // Toggle: si dÃ©jÃ  sÃ©lectionnÃ©, on dÃ©sÃ©lectionne
                     if (index > -1) {
                         activePoliceSubcategories.splice(index, 1);
                         // Retirer le style actif
                         this.classList.remove('bg-blue-500/20', 'border-blue-400', 'text-white');
                         this.classList.add('border-blue-500/50', 'text-blue-300');
                     } else {
-                        // Sinon on ajoute à la sélection
+                        // Sinon on ajoute Ã  la sÃ©lection
                         activePoliceSubcategories.push(subcategoryValue);
                         // Ajouter le style actif
                         this.classList.remove('border-blue-500/50', 'text-blue-300');
                         this.classList.add('bg-blue-500/20', 'border-blue-400', 'text-white');
                     }
                     
-                    // Rafraîchir la grille avec les filtres actifs
+                    // RafraÃ®chir la grille avec les filtres actifs
                     renderCarsByTag('police', activePoliceSubcategories);
                 });
             });
@@ -764,21 +764,21 @@
                     const subcategoryValue = this.dataset.ambulanceSubcategory;
                     const index = activeAmbulanceSubcategories.indexOf(subcategoryValue);
                     
-                    // Toggle: si déjà sélectionné, on désélectionne
+                    // Toggle: si dÃ©jÃ  sÃ©lectionnÃ©, on dÃ©sÃ©lectionne
                     if (index > -1) {
                         activeAmbulanceSubcategories.splice(index, 1);
                         // Retirer le style actif
                         this.classList.remove('bg-red-500/20', 'border-red-400', 'text-white');
                         this.classList.add('border-red-500/50', 'text-red-300');
                     } else {
-                        // Sinon on ajoute à la sélection
+                        // Sinon on ajoute Ã  la sÃ©lection
                         activeAmbulanceSubcategories.push(subcategoryValue);
                         // Ajouter le style actif
                         this.classList.remove('border-red-500/50', 'text-red-300');
                         this.classList.add('bg-red-500/20', 'border-red-400', 'text-white');
                     }
                     
-                    // Rafraîchir la grille avec les filtres actifs
+                    // RafraÃ®chir la grille avec les filtres actifs
                     renderCarsByTag('ambulance', activeAmbulanceSubcategories);
                 });
             });
@@ -801,6 +801,7 @@
     </script>
 </body>
 </html>
+
 
 
 

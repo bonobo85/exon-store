@@ -11,6 +11,7 @@ let authLogs = JSON.parse(localStorage.getItem('bonobo_authLogs') || '[]'); // l
 let searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
 let productBubbleAnimationId = null;
 let productBubbleCleanup = null;
+let cartItemChangePulseId = null;
 const ADMIN_EMAIL = 'bonobo.des.alpes@gmail.com';
 const ADMIN_PASSWORD = 'zboubus85!';
 
@@ -253,6 +254,26 @@ function ensureProfileModalStructure() {
         paymentTab.innerHTML = '<div id="payment-methods-items" class="space-y-3"></div>';
         modalBody.appendChild(paymentTab);
     }
+}
+
+function refreshFooterVisibility() {
+    const footer = document.querySelector('body > .min-h-full > footer');
+    if (!footer) return;
+
+    // Reset to natural flow before measuring real page height.
+    document.body.classList.remove('footer-pinned');
+    document.body.style.removeProperty('--footer-reserved-space');
+
+    const pageHeight = document.documentElement.scrollHeight;
+    const viewportHeight = window.innerHeight;
+    const tolerance = 220;
+    const shouldPinFooter = pageHeight <= viewportHeight + tolerance;
+
+    if (!shouldPinFooter) return;
+
+    const footerHeight = footer.offsetHeight || 0;
+    document.body.style.setProperty('--footer-reserved-space', `${footerHeight}px`);
+    document.body.classList.add('footer-pinned');
 }
 
 function getUserPaymentMethods() {
@@ -607,6 +628,17 @@ function addToCart(product) {
 }
 
 function removeFromCart(cartId) {
+    const animatedCard = document.querySelector(`.cart-page-item[data-cart-id="${cartId}"]`);
+    if (animatedCard) {
+        animatedCard.classList.add('cart-removing');
+        setTimeout(() => {
+            cartItems = cartItems.filter(item => item.cartId !== cartId);
+            updateCartInDB();
+            updateCartUI();
+        }, 220);
+        return;
+    }
+
     cartItems = cartItems.filter(item => item.cartId !== cartId);
     updateCartInDB();
     updateCartUI();
@@ -616,6 +648,7 @@ function updateQuantity(cartId, quantity) {
     const item = cartItems.find(item => item.cartId === cartId);
     if (item) {
         item.quantity = Math.max(1, quantity);
+        cartItemChangePulseId = cartId;
         updateCartInDB();
         updateCartUI();
     }
@@ -794,6 +827,30 @@ function updateCartUI() {
     const count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
     const cartCount = document.getElementById('cart-count');
     if (cartCount) cartCount.textContent = count;
+
+    const cartHeaderCount = document.getElementById('cart-header-count');
+    if (cartHeaderCount) {
+        cartHeaderCount.textContent = String(count);
+    }
+
+    const cartSummaryCount = document.getElementById('cart-summary-count');
+    if (cartSummaryCount) {
+        const label = count > 1 ? 'articles' : 'article';
+        cartSummaryCount.textContent = `${count} ${label}`;
+    }
+
+    const emptyState = document.getElementById('cart-empty-state');
+    const contentState = document.getElementById('cart-content-state');
+    if (emptyState && contentState) {
+        if (cartItems.length === 0) {
+            emptyState.classList.remove('hidden');
+            contentState.classList.add('hidden');
+        } else {
+            emptyState.classList.add('hidden');
+            contentState.classList.remove('hidden');
+        }
+    }
+
     renderCartItems();
     calculateTotals();
 
@@ -824,8 +881,46 @@ function renderCartItems() {
     const container = document.getElementById('cart-items');
     if (!container) return;
 
+    const isCartPageLayout = container.dataset.layout === 'page';
+
+    if (isCartPageLayout && cartItems.length === 0) {
+        container.innerHTML = '';
+        return;
+    }
+
     if (cartItems.length === 0) {
         container.innerHTML = '<p class="text-gray-400 text-center py-8">Votre panier est vide</p>';
+        return;
+    }
+
+    if (isCartPageLayout) {
+        container.innerHTML = cartItems.map((item, index) => {
+            const unitPrice = Number(item.price) || 0;
+            const lineTotal = unitPrice * item.quantity;
+            const image = item.images && item.images.length > 0 ? item.images[0] : 'https://i.postimg.cc/W1sN31dJ/exon.png';
+            const isUpdated = cartItemChangePulseId === item.cartId;
+            return `
+                <article class="cart-page-item ${isUpdated ? 'cart-item-updated' : ''}" data-cart-id="${item.cartId}" style="--cart-stagger:${index * 70}ms;">
+                    <img src="${image}" alt="${item.title}" class="cart-page-thumb" onerror="this.src='https://i.postimg.cc/W1sN31dJ/exon.png'">
+                    <div class="cart-page-item-info">
+                        <p class="cart-page-item-title">${item.title}</p>
+                        <p class="cart-page-item-subtitle">${item.subtitle || 'Ressource premium Exon'}</p>
+                        <p class="cart-page-item-price">${unitPrice === 0 ? 'GRATUIT' : unitPrice.toFixed(2) + ' EUR'}</p>
+                    </div>
+                    <div class="cart-page-item-actions">
+                        <div class="cart-page-qty">
+                            <button onclick="updateQuantity('${item.cartId}', ${item.quantity - 1})" aria-label="Diminuer la quantite">-</button>
+                            <span>${item.quantity}</span>
+                            <button onclick="updateQuantity('${item.cartId}', ${item.quantity + 1})" aria-label="Augmenter la quantite">+</button>
+                        </div>
+                        <p class="cart-page-line-total">${lineTotal.toFixed(2)} EUR</p>
+                        <button onclick="removeFromCart('${item.cartId}')" class="cart-page-remove">Supprimer</button>
+                    </div>
+                </article>
+            `;
+        }).join('');
+
+        cartItemChangePulseId = null;
         return;
     }
 
@@ -890,6 +985,11 @@ function calculateTotals() {
     } else {
         discountLine.classList.add('hidden');
     }
+
+    const subtotalChip = document.getElementById('cart-subtotal-chip');
+    const totalChip = document.getElementById('cart-total-chip');
+    if (subtotalChip) subtotalChip.textContent = subtotal.toFixed(2) + ' EUR';
+    if (totalChip) totalChip.textContent = total.toFixed(2) + ' EUR';
 }
 
 // ==================== PAYMENT ====================
@@ -1332,8 +1432,17 @@ function showAuth() {
 }
 
 function showCart() {
-    // cart always visible; login only required for payment
-    document.getElementById('cart-modal').classList.add('active');
+    const path = window.location.pathname || '';
+    const inPagesFolder = /\/pages\//.test(path);
+    const cartPath = inPagesFolder ? 'cart.html' : 'pages/cart.html';
+    const isAlreadyOnCart = path.endsWith('/cart.html') || path.endsWith('cart.html');
+
+    if (isAlreadyOnCart) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+    }
+
+    window.location.href = cartPath;
 }
 
 function showProfile() {
@@ -1355,7 +1464,9 @@ function showProfile() {
 }
 
 function closeModal(modalId) {
-    document.getElementById(modalId).classList.remove('active');
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+    modal.classList.remove('active');
     if (modalId === 'product-modal') {
         stopProductBubbleAnimation();
     }
@@ -1515,6 +1626,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     window.addEventListener('beforeunload', function() {
         localStorage.setItem('bonobo_cart', JSON.stringify(cartItems));
     });
+
+    refreshFooterVisibility();
+    window.addEventListener('resize', refreshFooterVisibility);
 });
 
 

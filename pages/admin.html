@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -81,7 +81,7 @@
                 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div class="mb-8 text-white">
                         <h1 class="font-display text-3xl md:text-4xl font-bold mb-4">Interface d'administration</h1>
-                        <p class="text-gray-400">Accès réservé au compte admin. Suivez les achats, membres, revenus et connexions actives.</p>
+                        <p class="text-gray-400">AccÃ¨s rÃ©servÃ© au compte admin. Suivez les achats, membres, revenus et connexions actives.</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -94,27 +94,27 @@
                             <p id="admin-total-members" class="text-2xl font-bold text-white mt-1">0</p>
                         </div>
                         <div class="bg-gradient-to-br from-[#0f0f0f] to-[#0a0a0a] border border-white/5 rounded-2xl p-5">
-                            <p class="text-gray-400 text-sm">Personnes connectées</p>
+                            <p class="text-gray-400 text-sm">Personnes connectÃ©es</p>
                             <p id="admin-active-now" class="text-2xl font-bold text-white mt-1">0</p>
                         </div>
                     </div>
 
                     <div class="bg-gradient-to-br from-[#0f0f0f] to-[#0a0a0a] border border-white/5 rounded-2xl p-6 shadow-lg mb-8">
-                        <h2 class="text-white font-bold mb-2">PERSONNES CONNECTÉES (24H)</h2>
-                        <p class="text-gray-400 text-sm mb-4">Graphique des sessions créées par heure.</p>
+                        <h2 class="text-white font-bold mb-2">PERSONNES CONNECTÃ‰ES (24H)</h2>
+                        <p class="text-gray-400 text-sm mb-4">Graphique des sessions crÃ©Ã©es par heure.</p>
                         <div id="active-users-chart"></div>
                     </div>
 
                     <div class="bg-gradient-to-br from-[#0f0f0f] to-[#0a0a0a] border border-white/5 rounded-2xl p-6 shadow-lg mb-8">
                         <details class="group" open>
-                            <summary class="cursor-pointer text-white font-bold">Liste d'achat (déroulante)</summary>
+                            <summary class="cursor-pointer text-white font-bold">Liste d'achat (dÃ©roulante)</summary>
                             <div id="admin-purchases-list" class="mt-4"></div>
                         </details>
                     </div>
 
                     <div class="bg-gradient-to-br from-[#0f0f0f] to-[#0a0a0a] border border-white/5 rounded-2xl p-6 shadow-lg mb-8">
                         <details class="group" open>
-                            <summary class="cursor-pointer text-white font-bold">Liste des membres (déroulante)</summary>
+                            <summary class="cursor-pointer text-white font-bold">Liste des membres (dÃ©roulante)</summary>
                             <div id="admin-members-list" class="mt-4"></div>
                         </details>
                     </div>
@@ -141,7 +141,7 @@
                             <h3 class="text-white font-bold mb-3">Actions rapides</h3>
                             <p class="text-gray-400 text-sm mb-4">Executez des actions d'administration courantes.</p>
                             <div class="flex flex-col gap-3">
-                                <button class="btn-secondary px-4 py-2 rounded-lg">Réinitialiser mots de passe</button>
+                                <button class="btn-secondary px-4 py-2 rounded-lg">RÃ©initialiser mots de passe</button>
                                 <button class="btn-secondary px-4 py-2 rounded-lg">Purger utilisateurs inactifs</button>
                             </div>
                         </div>
@@ -150,16 +150,19 @@
             </section>
         </div>
 
-        <!-- Footer (copied from templates for identical style) -->
+        <!-- Footer -->
         <footer class="bg-black border-t border-white/10 py-12 mt-auto">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                    <!-- Brand -->
                     <div class="md:col-span-2">
                         <div class="flex items-center gap-3 mb-4">
                             <span class="font-display text-xl font-bold text-white">EXON</span>
                         </div>
-                        <p class="text-gray-400 text-sm max-w-md">Votre source de confiance pour des ressources FiveM de haute qualité. Scripts, vêtements et templates pour créer le serveur parfait.</p>
+                        <p class="text-gray-400 text-sm max-w-md">Votre source de confiance pour des ressources FiveM de haute qualitÃ©. Scripts, vÃªtements et templates pour crÃ©er le serveur parfait.</p>
                     </div>
+                    
+                    <!-- Links -->
                     <div>
                         <h4 class="font-bold text-white mb-4">Navigation</h4>
                         <ul class="space-y-2">
@@ -167,10 +170,12 @@
                             <li><a href="cars.html" class="text-gray-400 hover:text-white text-sm transition-colors">Cars</a></li>
                             <li><a href="scripts.html" class="text-gray-400 hover:text-white text-sm transition-colors">Scripts</a></li>
                             <li><a href="clothes.html" class="text-gray-400 hover:text-white text-sm transition-colors">Clothes</a></li>
-                            <li><a href="templates.html" class="text-gray-400 hover;text-white text-sm transition-colors">Templates</a></li>
+                            <li><a href="templates.html" class="text-gray-400 hover:text-white text-sm transition-colors">Templates</a></li>
                             <li><a href="about.html" class="text-gray-400 hover:text-white text-sm transition-colors">About</a></li>
                         </ul>
                     </div>
+                    
+                    <!-- Support -->
                     <div>
                         <h4 class="font-bold text-white mb-4">Support</h4>
                         <ul class="space-y-2">
@@ -180,8 +185,9 @@
                         </ul>
                     </div>
                 </div>
+                
                 <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <p class="text-gray-500 text-sm">© 2026 Exon. Tous droits réservés.</p>
+                    <p class="text-gray-500 text-sm">Â© 2026 Exon. Tous droits rÃ©servÃ©s.</p>
                     <div class="flex items-center gap-4">
                         <a href="https://discord.com/invite/c9cKtrwMrs" target="_blank" rel="noopener noreferrer" class="text-[#5865F2] hover:text-[#7B86FF] transition-colors">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -239,6 +245,7 @@
     </script>
 </body>
 </html>
+
 
 
 
