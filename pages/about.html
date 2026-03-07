@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exon Store -  Propos</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2amily=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="h-full overflow-auto scrollbar-hide">
+    <div class="min-h-full flex flex-col">
+        <!-- Navigation -->
+        <nav class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16 md:h-20">
+                    <!-- Logo -->
+                    <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                        <span class="font-display text-xl md:text-2xl font-bold tracking-wider text-white">EXON</span>
+                    </div>
+                    
+                    <!-- Desktop Navigation -->
+                    <div class="hidden md:flex items-center gap-8">
+                        <a href="index.html" class="nav-link font-medium">Accueil</a>
+                        <a href="cars.html" class="nav-link font-medium">Cars</a>
+                        <a href="scripts.html" class="nav-link font-medium">Scripts</a>
+                        <a href="clothes.html" class="nav-link font-medium">Clothes</a>
+                        <a href="templates.html" class="nav-link font-medium">Templates</a>
+                        <a href="about.html" class="nav-link active font-medium">About</a>
+                        <a href="admin.html" class="nav-link font-medium admin-only-link hidden">Admin</a>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="flex items-center gap-3">
+                        <!-- Search -->
+                        <div class="search-container" id="search-container">
+                            <div class="search-input-wrapper">
+                                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                                <input type="text" id="search-input-nav" placeholder="Rechercher un produit...">
+                            </div>
+                            <div class="search-results-dropdown" id="search-results-dropdown"></div>
+                        </div>
+                        
+                        <!-- Cart -->
+                        <button onclick="showCart()" class="relative p-2 text-gray-400 hover:text-white transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                            <span id="cart-count" class="absolute -top-1 -right-1 w-4 h-4 bg-white text-black text-xs font-bold rounded-full flex items-center justify-center">0</span>
+                        </button>
+                        
+                        <!-- Auth Buttons -->
+                        <button id="auth-btn" onclick="showAuth()" class="hidden sm:block btn-primary px-4 py-2 rounded-lg font-semibold text-sm">CONNEXION</button>
+                        <button id="profile-btn" onclick="showProfile()" class="hidden sm:block btn-primary px-4 py-2 rounded-lg font-semibold text-sm hidden">Profil</button>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-400 hover:text-white" onclick="toggleMobileMenu(event)">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="md:hidden hidden bg-black/95 border-t border-white/10">
+                <div class="px-4 py-4 space-y-3">
+                    <a href="index.html" class="block w-full text-left py-2 text-gray-400 hover:text-white">Accueil</a>
+                    <a href="cars.html" class="block w-full text-left py-2 text-gray-400 hover:text-white">Cars</a>
+                    <a href="scripts.html" class="block w-full text-left py-2 text-gray-400 hover:text-white">Scripts</a>
+                    <a href="clothes.html" class="block w-full text-left py-2 text-gray-400 hover:text-white">Clothes</a>
+                    <a href="templates.html" class="block w-full text-left py-2 text-gray-400 hover:text-white">Templates</a>
+                    <a href="about.html" class="block w-full text-left py-2 text-white font-medium">About</a>
+                    <a href="admin.html" class="block w-full text-left py-2 text-white font-medium admin-only-link hidden">Admin</a>
+                    <button id="auth-btn-mobile" onclick="showAuth()" class="w-full btn-primary px-4 py-2 rounded-lg font-semibold text-sm mt-4">CONNEXION</button>
+                    <button id="profile-btn-mobile" onclick="showProfile()" class="w-full btn-secondary px-4 py-2 rounded-lg font-semibold text-sm mt-4 hidden">Profil</button>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Main Content -->
+        <div id="main-content" class="flex-1 pt-16 md:pt-20">
+            <section class="py-16 md:py-24 bg-gradient-to-b from-black to-gray-900 relative">
+                <div class="absolute inset-0 grid-pattern opacity-30"></div>
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="text-center mb-12">
+                        <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-4">À PROPOS D'EXON</h2>
+                        <p class="text-gray-400 max-w-2xl mx-auto">Une équipe de jeunes devs qui construit les ressources utiles que les serveurs attendent vraiment</p>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <div>
+                            <h3 class="font-display text-2xl font-bold text-white mb-4">Notre Histoire</h3>
+                            <p class="text-gray-400 mb-4">Exon, c'est d'abord une bande de jeunes développeurs passionnés qui veulent aider les serveurs là où beaucoup ne veulent pas s'impliquer: les tâches techniques longues, répétitives et complexes.</p>
+                            <p class="text-gray-400">On transforme ces besoins en solutions concrètes, propres et prêtes à l'emploi, pour que chaque créateur puisse se concentrer sur son projet au lieu de perdre du temps sur des blocages techniques.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display text-2xl font-bold text-white mb-4">Notre Mission</h3>
+                            <p class="text-gray-400 mb-4">Notre mission est simple: proposer des produits utiles, robustes et accessibles pour tous les types de serveurs et de projets.</p>
+                            <ul class="text-gray-400 space-y-2">
+                                <li> Développer des scripts performants et faciles à intégrer</li>
+                                <li> Créer des vêtements et des véhicules de tout type</li>
+                                <li> Proposer des templates pour bots et sites internet</li>
+                                <li> Maintenir et améliorer nos produits avec les retours de la communauté</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Footer (identique) -->
+        <footer class="bg-black border-t border-white/10 py-12 mt-auto">
+            <!-- Meme footer -->
+        </footer>
+    </div>
+    
+    <!-- Modals -->
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content max-w-md">
+            <div class="modal-header">
+                <h2 class="font-display text-2xl font-bold text-white">CONNEXION</h2>
+                <button onclick="closeModal('auth-modal')" class="text-gray-400 hover:text-white text-2xl leading-none">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('login')">CONNEXION</button>
+                    <button class="tab-btn" onclick="switchTab('register')">Inscription</button>
+                </div>
+                
+                <!-- Login Tab -->
+                <div id="login-tab" class="tab-content active">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="login-email" class="form-input" placeholder="votre@email.com">
+                        <div id="login-email-error" class="error-message"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Mot de passe</label>
+                        <input type="password" id="login-password" class="form-input" placeholder="password">
+                        <div id="login-password-error" class="error-message"></div>
+                    </div>
+                    <div id="login-error" class="error-message mb-4"></div>
+                    <button id="login-btn" onclick="handleLogin()" class="w-full btn-primary px-4 py-3 rounded-lg font-semibold">Se connecter</button>
+                    
+                    <div class="relative my-6">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-700"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-gray-800 text-gray-400">ou</span>
+                        </div>
+                    </div>
+                    
+                    <button onclick="handleGoogleLogin()" class="w-full bg-white hover:bg-gray-100 text-gray-900 px-4 py-3 rounded-lg font-semibold flex items-center justify-center gap-3 transition-colors">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Se connecter avec Google
+                    </button>
+                </div>
+                
+                <!-- Register Tab -->
+                <div id="register-tab" class="tab-content">
+                    <div class="form-group">
+                        <label class="form-label">Nom d'utilisateur</label>
+                        <input type="text" id="register-username" class="form-input" placeholder="mon_pseudo">
+                        <div id="register-username-error" class="error-message"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="register-email" class="form-input" placeholder="votre@email.com">
+                        <div id="register-email-error" class="error-message"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Mot de passe</label>
+                        <input type="password" id="register-password" class="form-input" placeholder="password">
+                        <div id="register-password-error" class="error-message"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirmer le mot de passe</label>
+                        <input type="password" id="register-confirm" class="form-input" placeholder="password">
+                        <div id="register-confirm-error" class="error-message"></div>
+                    </div>
+                    <div id="register-error" class="error-message mb-4"></div>
+                    <button id="register-btn" onclick="handleRegister()" class="w-full btn-primary px-4 py-3 rounded-lg font-semibold">S'inscrire</button>
+                    
+                    <div class="relative my-6">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-700"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-gray-800 text-gray-400">ou</span>
+                        </div>
+                    </div>
+                    
+                    <button onclick="handleGoogleLogin()" class="w-full bg-white hover:bg-gray-100 text-gray-900 px-4 py-3 rounded-lg font-semibold flex items-center justify-center gap-3 transition-colors">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        S'inscrire avec Google
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="font-display text-2xl font-bold text-white">PANIER</h2>
+                <button onclick="closeModal('cart-modal')" class="text-gray-400 hover:text-white text-2xl leading-none">X</button>
+            </div>
+            <div class="modal-body">
+                <div id="cart-items" class="space-y-4 max-h-96 overflow-y-auto scrollbar-hide mb-6"></div>
+                <div class="border-t border-white/10 pt-4 mb-4">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-gray-400">Sous-total:</span>
+                        <span id="subtotal" class="text-white font-semibold">0.00 EUR</span>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label class="form-label">Code promo</label>
+                        <div class="input-group">
+                            <input type="text" id="promo-code" class="form-input" placeholder="PROMO2024">
+                            <button id="apply-promo-btn" onclick="applyPromo()" class="btn-primary px-4 py-2 rounded-lg font-semibold text-sm">Appliquer</button>
+                        </div>
+                        <div id="promo-message"></div>
+                    </div>
+                    <div id="discount-line" class="flex justify-between mb-2 hidden">
+                        <span class="text-gray-400">réduction:</span>
+                        <span id="discount-amount" class="text-green-400 font-semibold">-0.00 EUR</span>
+                    </div>
+                    <div class="flex justify-between border-t border-white/10 pt-4">
+                        <span class="text-white font-bold">Total:</span>
+                        <span id="total" class="text-white font-bold text-lg">0.00 EUR</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal('cart-modal')" class="btn-secondary px-6 py-2 rounded-lg font-semibold">Fermer</button>
+                <button id="checkout-btn" onclick="showPayment()" class="btn-primary px-6 py-2 rounded-lg font-semibold">Passer la commande</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="modal">
+        <div class="modal-content max-w-md">
+            <div class="modal-header">
+                <h2 class="font-display text-2xl font-bold text-white">PAIEMENT</h2>
+                <button onclick="closeModal('payment-modal')" class="text-gray-400 hover:text-white text-2xl leading-none">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-6 p-4 rounded-lg bg-white/5 border border-white/10">
+                    <p class="text-gray-400 text-sm mb-2">Montant  payer:</p>
+                    <p class="font-display text-3xl font-bold text-white" id="payment-amount">0.00 EUR</p>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">numero de carte</label>
+                    <input type="text" id="card-number" class="form-input" placeholder="4532 1234 5678 9010" maxlength="19">
+                    <div id="card-error" class="error-message"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="form-group mb-0">
+                        <label class="form-label">Expiration</label>
+                        <input type="text" id="card-expiry" class="form-input" placeholder="MM/YY" maxlength="5">
+                    </div>
+                    <div class="form-group mb-0">
+                        <label class="form-label">CVV</label>
+                        <input type="text" id="card-cvv" class="form-input" placeholder="123" maxlength="3">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Titulaire</label>
+                    <input type="text" id="card-holder" class="form-input" placeholder="Nom du titulaire">
+                </div>
+                <div id="payment-error" class="error-message mb-4"></div>
+                <button id="pay-btn" onclick="processPayment()" class="w-full btn-primary px-4 py-3 rounded-lg font-semibold">Payer maintenant</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="modal">
+        <div class="modal-content max-w-2xl">
+            <div class="modal-header">
+                <h2 class="font-display text-2xl font-bold text-white">MON PROFIL</h2>
+                <button onclick="closeModal('profile-modal')" class="text-gray-400 hover:text-white text-2xl leading-none">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('profile-info')">Informations</button>
+                    <button class="tab-btn" onclick="switchTab('purchase-history')">Historique</button>
+                </div>
+                
+                <!-- Profile Info Tab -->
+                <div id="profile-info-tab" class="tab-content active">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="form-label">Nom d'utilisateur</label>
+                            <p class="text-white font-semibold" id="profile-username">-</p>
+                        </div>
+                        <div>
+                            <label class="form-label">Email</label>
+                            <p class="text-white font-semibold" id="profile-email">-</p>
+                        </div>
+                        <div>
+                            <label class="form-label">Date d'inscription</label>
+                            <p class="text-white font-semibold" id="profile-joined">-</p>
+                        </div>
+                        <button id="logout-btn" onclick="handleLogout()" class="w-full btn-secondary px-4 py-2 rounded-lg font-semibold mt-6">déconnexion</button>
+                    </div>
+                </div>
+                
+                <!-- Purchase History Tab -->
+                <div id="purchase-history-tab" class="tab-content">
+                    <div id="history-items" class="space-y-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Product Modal -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content max-w-4xl">
+            <div class="modal-header">
+                <h2 class="font-display text-2xl font-bold text-white" id="product-modal-title">DÉTAILS DU PRODUIT</h2>
+                <button onclick="closeModal('product-modal')" class="text-gray-400 hover:text-white text-2xl leading-none">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Product Image -->
+                    <div class="flex items-center justify-center">
+                        <div id="product-image-container" class="w-full aspect-square gradient-border rounded-2xl p-8 glow-effect flex items-center justify-center">
+                            <svg class="w-32 h-32 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 6l-3.5 5h3.5M10 6l3.5 5H10m6-5l-3.5 5h3.5m-6.5 6l3 2H3l3-2m12 0l3 2h-6.5l3-2m-12 0v-2a2 2 0 012-2h12a2 2 0 012 2v2m-16 0h16" />
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <!-- Product details -->
+                    <div>
+                        <div id="product-badge-container" class="mb-4"></div>
+                        <h3 id="product-title" class="font-display text-3xl font-bold text-white mb-2">-</h3>
+                        <p id="product-subtitle" class="text-sm text-gray-400 uppercase tracking-wider mb-4">-</p>
+                        
+                        <div class="mb-6">
+                            <div class="flex items-center gap-4">
+                                <span id="product-price" class="font-display text-3xl font-bold text-white">0.00 EUR</span>
+                                <span id="product-original-price" class="text-lg text-gray-500 line-through hidden">0.00 EUR</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h4 class="font-bold text-white mb-2">Description</h4>
+                            <p id="product-details" class="text-gray-300 text-sm leading-relaxed">-</p>
+                        </div>
+                        <div id="product-meta" class="text-sm text-gray-400 mb-4"></div>
+                        <div id="features-container" class="mb-6 hidden">
+                            <h4 class="font-bold text-white mb-2">caracteristiques</h4>
+                            <ul id="features-list" class="space-y-2 text-sm"></ul>
+                        </div>
+                        
+                        <div class="flex gap-4">
+                            <button id="add-to-cart-btn" onclick="addToCartFromModal(event)" class="flex-1 btn-secondary px-6 py-3 rounded-lg font-semibold flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                </svg>
+                                Ajouter au panier
+                            </button>
+                            <button id="buy-now-btn" onclick="buyNowFromModal(event)" class="flex-1 btn-primary px-6 py-3 rounded-lg font-semibold flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                                Acheter maintenant
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+        <footer class="bg-black border-t border-white/10 py-12 mt-auto">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                    <!-- Brand -->
+                    <div class="md:col-span-2">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="font-display text-xl font-bold text-white">EXON</span>
+                        </div>
+                        <p class="text-gray-400 text-sm max-w-md">Votre source de confiance pour des ressources FiveM de haute qualité. Scripts, vêtements et templates pour créer le serveur parfait.</p>
+                    </div>
+                    
+                    <!-- Links -->
+                    <div>
+                        <h4 class="font-bold text-white mb-4">Navigation</h4>
+                        <ul class="space-y-2">
+                            <li><a href="index.html" class="text-gray-400 hover:text-white text-sm transition-colors">Accueil</a></li>
+                            <li><a href="cars.html" class="text-gray-400 hover:text-white text-sm transition-colors">Cars</a></li>
+                            <li><a href="scripts.html" class="text-gray-400 hover:text-white text-sm transition-colors">Scripts</a></li>
+                            <li><a href="clothes.html" class="text-gray-400 hover:text-white text-sm transition-colors">Clothes</a></li>
+                            <li><a href="templates.html" class="text-gray-400 hover:text-white text-sm transition-colors">Templates</a></li>
+                            <li><a href="about.html" class="text-gray-400 hover:text-white text-sm transition-colors">About</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Support -->
+                    <div>
+                        <h4 class="font-bold text-white mb-4">Support</h4>
+                        <ul class="space-y-2">
+                            <li><a href="https://discord.com/invite/c9cKtrwMrs" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white text-sm transition-colors">Discord</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Documentation</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Conditions</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p class="text-gray-500 text-sm">© 2026 Exon. Tous droits réservés.</p>
+                    <div class="flex items-center gap-4">
+                        <a href="https://discord.com/invite/c9cKtrwMrs" target="_blank" rel="noopener noreferrer" class="text-[#5865F2] hover:text-[#7B86FF] transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z" />
+                            </svg>
+                        </a>
+                        <a href="https://www.youtube.com/@BonoboDesAlpes" target="_blank" rel="noopener noreferrer" class="text-[#FF0000] hover:text-[#FF4D4D] transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M23.498 6.186a2.997 2.997 0 0 0-2.11-2.12C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.388.566a2.997 2.997 0 0 0-2.11 2.12A31.14 31.14 0 0 0 0 12a31.14 31.14 0 0 0 .502 5.814 2.997 2.997 0 0 0 2.11 2.12C4.495 20.5 12 20.5 12 20.5s7.505 0 9.388-.566a2.997 2.997 0 0 0 2.11-2.12A31.14 31.14 0 0 0 24 12a31.14 31.14 0 0 0-.502-5.814zM9.75 15.568V8.432L15.818 12 9.75 15.568z" />
+                            </svg>
+                        </a>
+
+                        <a href="https://github.com/bonobo85" target="_blank" rel="noopener noreferrer" class="text-[#F6F8FA] hover:text-white transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    
+    <!-- Scripts -->
+    <!-- Firebase SDK -->
+    <script type="module" src="../js/firebase-config.js"></script>
+    <script type="module" src="../js/firebase-wrapper.js"></script>
+    <script src="../js/data.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/app-firebase-patch.js"></script>
+    <script>
+        function toggleMobileMenu(event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileLinks = document.querySelectorAll('#mobile-menu a, #mobile-menu button');
+            mobileLinks.forEach(element => {
+                element.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            });
+
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenu) {
+                mobileMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            
+            if (mobileMenu && !mobileMenu.classList.contains('hidden') && 
+                !mobileMenu.contains(event.target) && 
+                !mobileBtn.contains(event.target)) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

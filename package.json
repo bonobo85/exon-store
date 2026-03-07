@@ -1,0 +1,7 @@
+{
+  "name": "bonobo-shopv2",
+  "private": true,
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.0"
+  }
+}

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Exon Store - Détail Produit</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="h-full overflow-auto scrollbar-hide bg-black">
+    <div class="min-h-full flex flex-col">
+        <!-- Navigation -->
+        <nav class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16 md:h-20">
+                    <!-- Logo -->
+                    <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+                        <span class="font-display text-xl md:text-2xl font-bold tracking-wider text-white">EXON</span>
+                    </div>
+                    
+                    <!-- Desktop Navigation -->
+                    <div class="hidden md:flex items-center gap-8">
+                        <a href="index.html" class="nav-link font-medium">Accueil</a>
+                        <a href="cars.html" class="nav-link font-medium">Cars</a>
+                        <a href="scripts.html" class="nav-link font-medium">Scripts</a>
+                        <a href="clothes.html" class="nav-link font-medium">Clothes</a>
+                        <a href="templates.html" class="nav-link font-medium">Templates</a>
+                        <a href="about.html" class="nav-link font-medium">About</a>
+                        <a href="admin.html" class="nav-link font-medium admin-only-link hidden">Admin</a>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="flex items-center gap-3">
+                        <!-- Cart -->
+                        <button onclick="showCart()" class="relative p-2 text-gray-400 hover:text-white transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                            <span id="cart-count" class="absolute -top-1 -right-1 w-4 h-4 bg-white text-black text-xs font-bold rounded-full flex items-center justify-center">0</span>
+                        </button>
+                        
+                        <!-- Auth Buttons -->
+                        <button id="auth-btn" onclick="showAuth()" class="hidden sm:block btn-primary px-4 py-2 rounded-lg font-semibold text-sm">CONNEXION</button>
+                        <button id="profile-btn" onclick="showProfile()" class="hidden sm:block btn-primary px-4 py-2 rounded-lg font-semibold text-sm hidden">Profil</button>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-400 hover:text-white" onclick="toggleMobileMenu(event)">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="md:hidden hidden bg-black/95 border-t border-white/10">
+                <div class="px-4 py-4 space-y-3">
+                    <a href="index.html" class="block w-full text-left py-2 text-gray-400 hover:text-white">Accueil</a>
+                    <a href="cars.html" class="block w-full text-left py-2 text-gray-400 hover:text-white">Cars</a>
+                    <a href="scripts.html" class="block w-full text-left py-2 text-gray-400 hover:text-white">Scripts</a>
+                    <a href="clothes.html" class="block w-full text-left py-2 text-gray-400 hover:text-white">Clothes</a>
+                    <a href="templates.html" class="block w-full text-left py-2 text-gray-400 hover:text-white">Templates</a>
+                    <a href="about.html" class="block w-full text-left py-2 text-gray-400 hover:text-white">About</a>
+                    <a href="admin.html" class="block w-full text-left py-2 text-gray-400 hover:text-white admin-only-link hidden">Admin</a>
+                    <button id="auth-btn-mobile" onclick="showAuth()" class="w-full btn-primary px-4 py-2 rounded-lg font-semibold text-sm mt-4">CONNEXION</button>
+                    <button id="profile-btn-mobile" onclick="showProfile()" class="w-full btn-secondary px-4 py-2 rounded-lg font-semibold text-sm mt-4 hidden">Profil</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="flex-1 pt-20 md:pt-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <!-- Back Button -->
+                <button onclick="goBack()" class="mb-8 flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <span>Retour</span>
+                </button>
+
+                <!-- Product Header -->
+                <div class="mb-12">
+                    <!-- Badge and Tags -->
+                    <div class="flex flex-wrap items-center gap-3 mb-4">
+                        <div id="product-badge" class="inline-block px-4 py-2 rounded-full text-sm font-semibold"></div>
+                        <div id="product-tags" class="flex flex-wrap gap-2">
+                            <!-- Tags will be inserted here -->
+                        </div>
+                    </div>
+                    <h1 id="product-title" class="font-display text-4xl md:text-5xl font-bold text-white mb-4"></h1>
+                    <p id="product-subtitle" class="text-xl text-gray-400"></p>
+                </div>
+
+                <!-- Product Gallery Slider -->
+                <div class="mb-12" id="product-gallery">
+                    <div class="relative rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-br from-gray-900 to-black aspect-video">
+                        <img id="main-product-image" src="" alt="Aperçu produit" class="w-full h-full object-cover">
+                        <div id="main-image-placeholder" class="absolute inset-0 flex items-center justify-center">
+                            <svg class="w-24 h-24 text-white/15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+
+                        <button id="gallery-prev-btn" type="button" class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-white hover:text-black text-white border border-white/20 transition-all flex items-center justify-center" aria-label="Image précédente">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+
+                        <button id="gallery-next-btn" type="button" class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-white hover:text-black text-white border border-white/20 transition-all flex items-center justify-center" aria-label="Image suivante">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="mt-4 flex items-center gap-3">
+                        <button id="thumbs-prev-btn" type="button" class="w-9 h-9 rounded-full bg-black/60 hover:bg-white hover:text-black text-white border border-white/20 transition-all flex items-center justify-center" aria-label="Défiler les miniatures à gauche">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+
+                        <div id="product-thumbs" class="flex-1 overflow-x-auto scrollbar-hide">
+                            <div id="product-thumbs-track" class="flex gap-3 min-w-max">
+                                <!-- Thumbnails will be inserted here -->
+                            </div>
+                        </div>
+
+                        <button id="thumbs-next-btn" type="button" class="w-9 h-9 rounded-full bg-black/60 hover:bg-white hover:text-black text-white border border-white/20 transition-all flex items-center justify-center" aria-label="Défiler les miniatures à droite">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Info Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                    <!-- Left Column - Details -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <!-- Quick Actions -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <a id="support-btn" href="#" target="_blank" rel="noopener noreferrer" class="group flex items-center justify-center gap-3 bg-gradient-to-r from-indigo-600 to-blue-500 text-white font-bold py-4 px-6 rounded-xl border border-indigo-300/30 hover:from-white hover:to-white hover:text-black transition-all duration-300">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M20.317 4.369a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037 13.877 13.877 0 00-.607 1.249 18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.249.077.077 0 00-.079-.037A19.736 19.736 0 003.68 4.369a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.055 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.873-1.295 1.226-1.994a.076.076 0 00-.041-.105 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 01.077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 01.078.009c.12.099.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.04.106c.36.698.771 1.363 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.548-13.66a.061.061 0 00-.031-.03z"/>
+                                </svg>
+                                <span>DISCORD SUPPORT</span>
+                            </a>
+
+                            <a id="video-btn" href="#" target="_blank" rel="noopener noreferrer" class="group flex items-center justify-center gap-3 bg-gradient-to-r from-red-600 to-rose-500 text-white font-bold py-4 px-6 rounded-xl border border-red-300/30 hover:from-white hover:to-white hover:text-black transition-all duration-300">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M23.498 6.186a2.996 2.996 0 00-2.11-2.12C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.388.52a2.996 2.996 0 00-2.11 2.121A31.084 31.084 0 000 12a31.084 31.084 0 00.502 5.814 2.996 2.996 0 002.11 2.121c1.883.52 9.388.52 9.388.52s7.505 0 9.388-.52a2.996 2.996 0 002.11-2.121A31.084 31.084 0 0024 12a31.084 31.084 0 00-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                                </svg>
+                                <span>YOUTUBE CHANNEL</span>
+                            </a>
+                        </div>
+
+                        <!-- Overview -->
+                        <div class="bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-2xl p-6 md:p-8">
+                            <h2 class="font-display text-2xl font-bold text-white mb-4">📋 Overview</h2>
+                            <p id="product-overview" class="text-gray-300 leading-relaxed"></p>
+                        </div>
+
+                        <!-- Key Features -->
+                        <div class="bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-2xl p-6 md:p-8">
+                            <h2 class="font-display text-2xl font-bold text-white mb-6">🔥 Key Features</h2>
+                            <div id="product-features" class="space-y-3">
+                                <!-- Features will be inserted here -->
+                            </div>
+                        </div>
+
+                        <!-- Technical Details -->
+                        <div id="technical-section" class="bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-2xl p-6 md:p-8">
+                            <h2 class="font-display text-2xl font-bold text-white mb-6">📦 Technical Details</h2>
+                            <div id="product-technical" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Technical details will be inserted here -->
+                            </div>
+                        </div>
+
+                        <!-- Important Information -->
+                        <div id="info-section" class="bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-2xl p-6 md:p-8">
+                            <h2 class="font-display text-2xl font-bold text-white mb-6">📜 Important Information</h2>
+                            <div id="product-info" class="space-y-3">
+                                <!-- Important info will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Purchase -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-2xl p-6 md:p-8 sticky top-24">
+                            <h2 class="font-display text-2xl font-bold text-white mb-6">💳 PURCHASE</h2>
+                            
+                            <div class="mb-6">
+                                <div class="flex items-baseline gap-2 mb-2">
+                                    <span id="product-price" class="font-display text-4xl font-bold text-white"></span>
+                                    <span id="product-original-price" class="text-xl font-semibold text-gray-500 line-through hidden"></span>
+                                </div>
+                                <p class="text-sm text-gray-400">TVA incluse</p>
+                            </div>
+
+                            <button onclick="addToCartFromDetail()" class="w-full bg-white text-black font-bold py-4 rounded-lg hover:bg-gray-200 transition-all transform hover:scale-105 mb-4">
+                                AJOUTER AU PANIER
+                            </button>
+
+                            <div class="space-y-3 pt-4 border-t border-white/10">
+                                <div class="flex items-center gap-3 text-gray-400">
+                                    <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span class="text-sm">Paiement sécurisé</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-gray-400">
+                                    <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
+                                    <span class="text-sm">Livraison instantanée</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-gray-400">
+                                    <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                    </svg>
+                                    <span class="text-sm">Support 24/7</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related Products -->
+                <div class="mb-12">
+                    <h2 class="font-display text-3xl font-bold text-white mb-8">Produits similaires</h2>
+                    <div id="related-products" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Related products will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-black border-t border-white/10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="text-center text-gray-400">
+                    <p class="font-display text-lg font-bold text-white mb-2">EXON STORE</p>
+                    <p class="text-sm">&copy; 2026 Exon Store. Tous droits réservés.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/firebase-wrapper.js"></script>
+    <script src="../js/data.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/product-detail.js"></script>
+</body>
+</html>
