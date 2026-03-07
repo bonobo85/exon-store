@@ -5,7 +5,7 @@
 (function() {
     'use strict';
     
-    console.log('?Y"? Firebase enhancements loading...');
+    console.log('🎉 Firebase enhancements loading...');
     
     // Store original functions
     const originalHandleLogin = window.handleLogin;
@@ -133,14 +133,14 @@
                     updateCartUI();
                     updateAuthUI();
                     closeModal('auth-modal');
-                    showToast('Inscription r?ussie! ?Y"?');
+                    showToast('Inscription réussie! 🎉');
                     
                     document.getElementById('register-btn').disabled = false;
                     document.getElementById('register-btn').innerHTML = 'S\'inscrire';
                     return;
                 } else {
                     document.getElementById('register-error').textContent = fbResult.error.includes('email-already-in-use') 
-                        ? 'Cet email est d?j? utilis?' 
+                        ? 'Cet email est déjà utilisé' 
                         : 'Erreur d\'inscription: ' + fbResult.error;
                     document.getElementById('register-btn').disabled = false;
                     document.getElementById('register-btn').innerHTML = 'S\'inscrire';
@@ -219,7 +219,7 @@
             if (window.fbWrapper && window.fbWrapper.isAvailable() && currentUser && currentUser.userId) {
                 try {
                     await window.fbWrapper.savePurchase(currentUser.userId, purchase);
-                    console.log('?o. Purchase saved to Firebase');
+                    console.log('✅ Purchase saved to Firebase');
                 } catch (error) {
                     console.error('Firebase purchase save error:', error);
                 }
@@ -243,7 +243,7 @@
                 updateCartInDB();
                 
                 closeModal('payment-modal');
-                showToast('Commande validee. Merci pour votre achat!');
+                showToast('Commande validée. Merci pour votre achat!');
                 renderPurchaseHistory();
             }
         };
@@ -252,7 +252,7 @@
     // New function for Google Sign-In
     window.handleGoogleLogin = async function() {
         if (!window.fbWrapper || !window.fbWrapper.isAvailable()) {
-            showToast('?s?? Connexion Google non disponible');
+            showToast('🔒 Connexion Google non disponible');
             return;
         }
         
@@ -287,9 +287,9 @@
                 closeModal('auth-modal');
                 
                 if (fbResult.isNewUser) {
-                    showToast(`Bienvenue ${user.username}! ?YZ? Compte cr?? avec Google`);
+                    showToast(`Bienvenue ${user.username}! 🎉 Compte créé avec Google`);
                 } else {
-                    showToast(`Bienvenue ${user.username}! ?Y"?`);
+                    showToast(`Bienvenue ${user.username}! 🎉`);
                 }
                 
                 if (pendingCheckout) {
@@ -297,14 +297,14 @@
                     showPayment();
                 }
             } else {
-                showToast('?O Erreur de connexion Google: ' + fbResult.error);
+                showToast('❌ Erreur de connexion Google: ' + fbResult.error);
             }
         } catch (error) {
             console.error('Google login error:', error);
-            showToast('?O Erreur de connexion Google');
+            showToast('❌ Erreur de connexion Google');
         }
     };
     
-    console.log('?o. Firebase enhancements loaded');
+    console.log('✅ Firebase enhancements loaded');
 })();
 
