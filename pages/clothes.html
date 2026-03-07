@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exon Store - vÃªtements</title>
+    <title>Exon Store - Vêtements</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -16,7 +16,7 @@
     <!-- Styles -->
     <link rel="stylesheet" href="../css/styles.css">
 </head>
-<body class="h-full overflow-auto scrollbar-hide">
+<body class="h-full overflow-auto scrollbar-hide" data-page="clothes">
     <div class="min-h-full flex flex-col">
         <!-- Navigation -->
         <nav class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
@@ -90,13 +90,13 @@
         </nav>
         
         <!-- Main Content -->
-        <div id="main-content" class="flex-1 pt-16 md:pt-20">
-            <section class="py-16 md:py-24 bg-gradient-to-b from-black to-gray-900 relative">
+        <div id="main-content" class="pt-16 md:pt-20">
+            <section class="py-16 md:py-24 bg-gradient-to-b from-black to-orange-950 relative">
                 <div class="absolute inset-0 grid-pattern opacity-30"></div>
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div class="text-center mb-12">
-                        <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-4">NOS VÃŠTEMENTS</h2>
-                        <p class="text-gray-400 max-w-2xl mx-auto">vÃªtements et accessoires uniques pour personnaliser vos personnages</p>
+                        <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-4">NOS VÊTEMENTS</h2>
+                        <p class="text-gray-400 max-w-2xl mx-auto">Vêtements et accessoires uniques pour personnaliser vos personnages</p>
                     </div>
                     <div id="clothes-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         <!-- Les produits sont inseres dynamiquement via JavaScript (app.js).
@@ -112,7 +112,7 @@
         </div>
         
         <!-- Footer -->
-        <footer class="bg-black border-t border-white/10 py-12 mt-auto">
+        <footer class="bg-black border-t border-white/10 py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                     <!-- Brand -->
@@ -120,7 +120,7 @@
                         <div class="flex items-center gap-3 mb-4">
                             <span class="font-display text-xl font-bold text-white">EXON</span>
                         </div>
-                        <p class="text-gray-400 text-sm max-w-md">Votre source de confiance pour des ressources FiveM de haute qualitÃ©. Scripts, vÃªtements et templates pour crÃ©er le serveur parfait.</p>
+                        <p class="text-gray-400 text-sm max-w-md">Votre source de confiance pour des ressources FiveM de haute qualité. Scripts, vêtements et templates pour créer le serveur parfait.</p>
                     </div>
                     
                     <!-- Links -->
@@ -148,7 +148,7 @@
                 </div>
                 
                 <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <p class="text-gray-500 text-sm">Â© 2026 Exon. Tous droits rÃ©servÃ©s.</p>
+                    <p class="text-gray-500 text-sm">© 2026 Exon. Tous droits réservés.</p>
                     <div class="flex items-center gap-4">
                         <a href="https://discord.com/invite/c9cKtrwMrs" target="_blank" rel="noopener noreferrer" class="text-[#5865F2] hover:text-[#7B86FF] transition-colors">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -274,7 +274,7 @@
     <div id="product-modal" class="modal">
         <div class="modal-content max-w-4xl">
             <div class="modal-header">
-                <h2 class="font-display text-2xl font-bold text-white" id="product-modal-title">DÃ‰TAILS DU PRODUIT</h2>
+                <h2 class="font-display text-2xl font-bold text-white" id="product-modal-title">DÉTAILS DU PRODUIT</h2>
                 <button onclick="closeModal('product-modal')" class="text-gray-400 hover:text-white text-2xl leading-none">X</button>
             </div>
             <div class="modal-body">

@@ -77,7 +77,9 @@ function ensureModalShell(modalId, markup) {
         modal.className = 'modal';
         document.body.appendChild(modal);
     }
+    const forceRefreshMarkup = modalId === 'auth-modal';
     if (
+        forceRefreshMarkup ||
         !modal.innerHTML ||
         modal.innerHTML.trim() === '' ||
         modal.innerHTML.includes('meme contenu') ||
@@ -90,53 +92,62 @@ function ensureModalShell(modalId, markup) {
 
 function ensureCommerceUI() {
     ensureModalShell('auth-modal', `
-        <div class="modal-content max-w-md">
-            <div class="modal-header">
-                <h2 class="font-display text-2xl font-bold text-white">CONNEXION</h2>
-                <button onclick="closeModal('auth-modal')" class="text-gray-400 hover:text-white text-2xl leading-none">X</button>
-            </div>
-            <div class="modal-body">
-                <div class="tabs">
-                    <button class="tab-btn active" onclick="switchTab('login')">CONNEXION</button>
-                    <button class="tab-btn" onclick="switchTab('register')">Inscription</button>
+        <div class="modal-content max-w-md auth-modal-content">
+            <div class="modal-header auth-modal-header">
+                <div>
+                    <p class="auth-kicker">Espace membre</p>
+                    <h2 class="font-display text-2xl font-bold text-white">Connexion / Inscription</h2>
                 </div>
-                <div id="login-tab" class="tab-content active">
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" id="login-email" class="form-input" placeholder="votre@email.com">
+                <button onclick="closeModal('auth-modal')" class="auth-close-btn" aria-label="Fermer la fenetre d'authentification">X</button>
+            </div>
+            <div class="modal-body auth-modal-body">
+                <div class="auth-modal-hero">
+                    <p class="auth-hero-title">Rejoins Exon Store</p>
+                    <p class="auth-hero-subtitle">Accede a ton profil, ton historique et finalise tes commandes en un clic.</p>
+                </div>
+                <div class="tabs auth-tabs">
+                    <button class="tab-btn auth-tab-btn active" data-tab="login" onclick="switchTab('login')">Connexion</button>
+                    <button class="tab-btn auth-tab-btn" data-tab="register" onclick="switchTab('register')">Inscription</button>
+                </div>
+                <div id="login-tab" class="tab-content auth-tab-content active">
+                    <div class="form-group auth-form-group">
+                        <label class="form-label auth-form-label">Email</label>
+                        <input type="email" id="login-email" class="form-input auth-input" placeholder="votre@email.com" autocomplete="email">
                         <div id="login-email-error" class="error-message"></div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Mot de passe</label>
-                        <input type="password" id="login-password" class="form-input" placeholder="password">
+                    <div class="form-group auth-form-group">
+                        <label class="form-label auth-form-label">Mot de passe</label>
+                        <input type="password" id="login-password" class="form-input auth-input" placeholder="Mot de passe" autocomplete="current-password">
                         <div id="login-password-error" class="error-message"></div>
                     </div>
                     <div id="login-error" class="error-message mb-4"></div>
-                    <button id="login-btn" onclick="handleLogin()" class="w-full btn-primary px-4 py-3 rounded-lg font-semibold">Se connecter</button>
+                    <button id="login-btn" onclick="handleLogin()" class="w-full btn-primary px-4 py-3 rounded-lg font-semibold auth-submit-btn">Se connecter</button>
+                    <div class="auth-divider"><span>ou</span></div>
+                    <button type="button" class="w-full auth-google-btn" onclick="if (window.handleGoogleLogin) window.handleGoogleLogin();">Continuer avec Google</button>
                 </div>
-                <div id="register-tab" class="tab-content">
-                    <div class="form-group">
-                        <label class="form-label">Nom d'utilisateur</label>
-                        <input type="text" id="register-username" class="form-input" placeholder="mon_pseudo">
+                <div id="register-tab" class="tab-content auth-tab-content">
+                    <div class="form-group auth-form-group">
+                        <label class="form-label auth-form-label">Nom d'utilisateur</label>
+                        <input type="text" id="register-username" class="form-input auth-input" placeholder="mon_pseudo" autocomplete="username">
                         <div id="register-username-error" class="error-message"></div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" id="register-email" class="form-input" placeholder="votre@email.com">
+                    <div class="form-group auth-form-group">
+                        <label class="form-label auth-form-label">Email</label>
+                        <input type="email" id="register-email" class="form-input auth-input" placeholder="votre@email.com" autocomplete="email">
                         <div id="register-email-error" class="error-message"></div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Mot de passe</label>
-                        <input type="password" id="register-password" class="form-input" placeholder="password">
+                    <div class="form-group auth-form-group">
+                        <label class="form-label auth-form-label">Mot de passe</label>
+                        <input type="password" id="register-password" class="form-input auth-input" placeholder="Mot de passe" autocomplete="new-password">
                         <div id="register-password-error" class="error-message"></div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Confirmer le mot de passe</label>
-                        <input type="password" id="register-confirm" class="form-input" placeholder="password">
+                    <div class="form-group auth-form-group">
+                        <label class="form-label auth-form-label">Confirmer le mot de passe</label>
+                        <input type="password" id="register-confirm" class="form-input auth-input" placeholder="Confirmation" autocomplete="new-password">
                         <div id="register-confirm-error" class="error-message"></div>
                     </div>
                     <div id="register-error" class="error-message mb-4"></div>
-                    <button id="register-btn" onclick="handleRegister()" class="w-full btn-primary px-4 py-3 rounded-lg font-semibold">S'inscrire</button>
+                    <button id="register-btn" onclick="handleRegister()" class="w-full btn-primary px-4 py-3 rounded-lg font-semibold auth-submit-btn">S'inscrire</button>
                 </div>
             </div>
         </div>

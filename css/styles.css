@@ -32,10 +32,6 @@ body > .min-h-full {
     min-height: 100vh;
 }
 
-body > .min-h-full > footer {
-    margin-top: auto;
-}
-
 body.footer-pinned {
     padding-bottom: var(--footer-reserved-space, 0px);
 }
@@ -233,14 +229,14 @@ body.footer-pinned > .min-h-full > footer {
 
 .flyer-card {
     position: fixed;
-    top: 20px;
+    top: 85px;
     right: 20px;
     background: linear-gradient(135deg, rgba(26, 26, 26, 0.98) 0%, rgba(13, 13, 13, 0.98) 100%);
     color: #fff;
     padding: 12px;
     border-radius: 12px;
     font-size: 14px;
-    z-index: 10000;
+    z-index: 40;
     pointer-events: none;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.1);
@@ -791,6 +787,220 @@ body.footer-pinned > .min-h-full > footer {
     display: block;
 }
 
+/* Auth Modal Refresh */
+#auth-modal .auth-modal-content {
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background:
+        radial-gradient(circle at 12% 8%, rgba(255, 255, 255, 0.12) 0%, transparent 36%),
+        radial-gradient(circle at 84% 4%, rgba(128, 128, 128, 0.14) 0%, transparent 33%),
+        linear-gradient(150deg, #141414 0%, #080808 100%);
+    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+}
+
+#auth-modal .auth-modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+#auth-modal .auth-kicker {
+    margin: 0 0 4px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.62);
+}
+
+#auth-modal .auth-close-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+#auth-modal .auth-close-btn:hover {
+    transform: scale(1.06);
+    border-color: rgba(255, 255, 255, 0.38);
+    color: #ffffff;
+}
+
+#auth-modal .auth-modal-body {
+    padding-top: 18px;
+}
+
+#auth-modal .auth-modal-hero {
+    margin-bottom: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 14px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+    animation: authHeroIn 0.45s ease both;
+}
+
+#auth-modal .auth-hero-title {
+    margin: 0 0 6px;
+    color: #ffffff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.03em;
+}
+
+#auth-modal .auth-hero-subtitle {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+#auth-modal .auth-tabs {
+    border-bottom: none;
+    margin-bottom: 18px;
+    background: rgba(0, 0, 0, 0.36);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 12px;
+    padding: 4px;
+    gap: 4px;
+}
+
+#auth-modal .auth-tab-btn {
+    flex: 1;
+    border-radius: 9px;
+    border-bottom: none;
+    color: rgba(255, 255, 255, 0.72);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 10px 12px;
+}
+
+#auth-modal .auth-tab-btn.active {
+    color: #ffffff;
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.18) 0%, rgba(64, 64, 64, 0.24) 100%);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+#auth-modal .auth-tab-content.active {
+    animation: authPanelIn 0.33s ease both;
+}
+
+#auth-modal .auth-form-group {
+    margin-bottom: 14px;
+}
+
+#auth-modal .auth-form-label {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 13px;
+    letter-spacing: 0.01em;
+}
+
+#auth-modal .auth-input {
+    border-radius: 10px;
+    padding: 12px 13px;
+    border-color: rgba(255, 255, 255, 0.16);
+    background: rgba(0, 0, 0, 0.32);
+}
+
+#auth-modal .auth-input:focus {
+    border-color: rgba(200, 200, 200, 0.65);
+    background: rgba(5, 5, 5, 0.72);
+    box-shadow: 0 0 0 3px rgba(160, 160, 160, 0.22);
+}
+
+#auth-modal .auth-submit-btn {
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 0.04em;
+    border-radius: 11px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
+}
+
+#auth-modal .auth-divider {
+    margin: 14px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    gap: 10px;
+}
+
+#auth-modal .auth-divider::before,
+#auth-modal .auth-divider::after {
+    content: '';
+    display: block;
+    height: 1px;
+    flex: 1;
+    background: rgba(255, 255, 255, 0.14);
+}
+
+#auth-modal .auth-google-btn {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.06);
+    color: #ffffff;
+    border-radius: 11px;
+    padding: 11px 14px;
+    font-weight: 600;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+#auth-modal .auth-google-btn:hover {
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.36);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+#auth-modal .auth-google-btn:active {
+    transform: translateY(0);
+}
+
+@keyframes authHeroIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes authPanelIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 640px) {
+    #auth-modal .auth-modal-content {
+        width: calc(100% - 20px);
+        max-width: none;
+    }
+
+    #auth-modal .auth-modal-header,
+    #auth-modal .auth-modal-body {
+        padding: 16px;
+    }
+
+    #auth-modal .auth-hero-subtitle {
+        font-size: 12px;
+    }
+}
+
 /* Spinner */
 .spinner {
     display: inline-block;
@@ -924,6 +1134,39 @@ body.footer-pinned > .min-h-full > footer {
 .ambulance-subcategory-btn:nth-child(4) { --index: 3; }
 .ambulance-subcategory-btn:nth-child(5) { --index: 4; }
 .ambulance-subcategory-btn:nth-child(6) { --index: 5; }
+
+/* Seasonal Subcategory Container */
+#seasonal-subcategories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0;
+    position: relative;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+#seasonal-subcategories.open {
+    max-height: 500px;
+    opacity: 1;
+    animation: slideDown 0.4s ease forwards;
+}
+
+#seasonal-subcategories.closing {
+    animation: slideUp 0.3s ease forwards;
+}
+
+.seasonal-subcategory-btn {
+    animation: scaleIn 0.4s ease forwards;
+    animation-delay: calc(var(--index, 0) * 0.05s);
+}
+
+.seasonal-subcategory-btn:nth-child(1) { --index: 0; }
+.seasonal-subcategory-btn:nth-child(2) { --index: 1; }
+.seasonal-subcategory-btn:nth-child(3) { --index: 2; }
+.seasonal-subcategory-btn:nth-child(4) { --index: 3; }
 
 /* Cart Page */
 .cart-page-bg {
@@ -1262,4 +1505,112 @@ body.footer-pinned > .min-h-full > footer {
         align-items: center;
         margin-top: 4px;
     }
+}
+
+/* Page-specific color themes for category filters */
+
+/* Scripts Page - Green Theme */
+body[data-page="scripts"] .category-filter-btn {
+    border-color: rgba(34, 197, 94, 0.5) !important;
+    color: rgb(134, 239, 172) !important;
+}
+
+body[data-page="scripts"] .category-filter-btn:hover {
+    border-color: rgb(74, 222, 128) !important;
+    background: rgba(34, 197, 94, 0.1) !important;
+}
+
+body[data-page="scripts"] .category-filter-btn.active {
+    background: rgba(34, 197, 94, 0.2) !important;
+    border-color: rgb(34, 197, 94) !important;
+    color: white !important;
+}
+
+/* Clothes Page - Orange Theme */
+body[data-page="clothes"] .category-filter-btn {
+    border-color: rgba(249, 115, 22, 0.5) !important;
+    color: rgb(253, 186, 116) !important;
+}
+
+body[data-page="clothes"] .category-filter-btn:hover {
+    border-color: rgb(251, 146, 60) !important;
+    background: rgba(249, 115, 22, 0.1) !important;
+}
+
+body[data-page="clothes"] .category-filter-btn.active {
+    background: rgba(249, 115, 22, 0.2) !important;
+    border-color: rgb(249, 115, 22) !important;
+    color: white !important;
+}
+
+/* Templates Page - Red Theme */
+body[data-page="templates"] .category-filter-btn {
+    border-color: rgba(239, 68, 68, 0.5) !important;
+    color: rgb(252, 165, 165) !important;
+}
+
+body[data-page="templates"] .category-filter-btn:hover {
+    border-color: rgb(248, 113, 113) !important;
+    background: rgba(239, 68, 68, 0.1) !important;
+}
+
+body[data-page="templates"] .category-filter-btn.active {
+    background: rgba(239, 68, 68, 0.2) !important;
+    border-color: rgb(239, 68, 68) !important;
+    color: white !important;
+}
+
+/* About Page - Gray/White Theme */
+body[data-page="about"] .category-filter-btn {
+    border-color: rgba(156, 163, 175, 0.5) !important;
+    color: rgb(209, 213, 219) !important;
+}
+
+body[data-page="about"] .category-filter-btn:hover {
+    border-color: rgb(209, 213, 219) !important;
+    background: rgba(156, 163, 175, 0.1) !important;
+}
+
+body[data-page="about"] .category-filter-btn.active {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgb(255, 255, 255) !important;
+    color: white !important;
+}
+
+/* Page-specific background effects */
+
+/* Scripts Page - Green radial gradients */
+body[data-page="scripts"] section.bg-gradient-to-b {
+    background: 
+        radial-gradient(circle at 15% 20%, rgba(34, 197, 94, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 85% 60%, rgba(34, 197, 94, 0.10) 0%, transparent 35%),
+        radial-gradient(circle at 50% 90%, rgba(16, 185, 129, 0.08) 0%, transparent 30%),
+        linear-gradient(180deg, #052e16 0%, #000000 35%) !important;
+}
+
+/* Clothes Page - Orange radial gradients */
+body[data-page="clothes"] section.bg-gradient-to-b {
+    background: 
+        radial-gradient(circle at 15% 20%, rgba(249, 115, 22, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 85% 60%, rgba(249, 115, 22, 0.10) 0%, transparent 35%),
+        radial-gradient(circle at 50% 90%, rgba(234, 88, 12, 0.08) 0%, transparent 30%),
+        linear-gradient(180deg, #431407 0%, #000000 35%) !important;
+}
+
+/* Templates Page - Red radial gradients */
+body[data-page="templates"] section.bg-gradient-to-b {
+    background: 
+        radial-gradient(circle at 15% 20%, rgba(239, 68, 68, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 85% 60%, rgba(239, 68, 68, 0.10) 0%, transparent 35%),
+        radial-gradient(circle at 50% 90%, rgba(220, 38, 38, 0.08) 0%, transparent 30%),
+        linear-gradient(180deg, #450a0a 0%, #000000 35%) !important;
+}
+
+/* About Page - Gray/White radial gradients */
+body[data-page="about"] section.bg-gradient-to-b {
+    background: 
+        radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 60%, rgba(156, 163, 175, 0.10) 0%, transparent 35%),
+        radial-gradient(circle at 50% 90%, rgba(209, 213, 219, 0.06) 0%, transparent 30%),
+        linear-gradient(180deg, #1f2937 0%, #000000 100%) !important;
 }
