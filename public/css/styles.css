@@ -582,8 +582,19 @@ body > .min-h-full > footer {
     background: rgba(255,255,255,0.15);
 }
 
+.form-input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.1);
+}
+
 .form-input::placeholder {
     color: rgba(255,255,255,0.5);
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
 }
 
 /* Error & Success Messages */

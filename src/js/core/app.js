@@ -22,7 +22,12 @@ function getAdminList() {
         const admins = JSON.parse(localStorage.getItem('bonobo_admins') || '[]');
         // Always include the main admin
         const mainAdmin = { email: ADMIN_EMAIL, password: ADMIN_PASSWORD, isMain: true };
-        const filteredAdmins = admins.filter(a => a.email !== ADMIN_EMAIL);
+        // Filter out main admin before adding back (avoid duplicates)
+        const filteredAdmins = admins.filter(a => {
+            const aEmail = a.email ? a.email.toLowerCase().trim() : '';
+            const mainEmail = ADMIN_EMAIL.toLowerCase().trim();
+            return aEmail !== mainEmail;
+        });
         return [mainAdmin, ...filteredAdmins];
     } catch (e) {
         return [{ email: ADMIN_EMAIL, password: ADMIN_PASSWORD, isMain: true }];
@@ -41,8 +46,13 @@ function saveAdminList(admins) {
 
 function isCurrentUserAdmin() {
     if (!currentUser) return false;
+    // Normalize email for comparison (lowercase)
+    const userEmail = currentUser.email ? currentUser.email.toLowerCase().trim() : '';
     const admins = getAdminList();
-    return admins.some(a => a.email === currentUser.email);
+    return admins.some(a => {
+        const adminEmail = a.email ? a.email.toLowerCase().trim() : '';
+        return adminEmail === userEmail;
+    });
 }
 
 function updateAdminVisibility() {
@@ -66,7 +76,17 @@ function enforceAdminPageAccess() {
     if (!isAdminPage) return true;
 
     const adminShell = document.getElementById('admin-page-shell');
-    if (!isCurrentUserAdmin()) {
+    const hasAdminAccess = isCurrentUserAdmin();
+    
+    // Debug logging
+    console.log('[Admin Access Check]', {
+        currentUserEmail: currentUser?.email,
+        isAdmin: hasAdminAccess,
+        ADMIN_EMAIL: ADMIN_EMAIL
+    });
+    
+    if (!hasAdminAccess) {
+        console.warn('[Admin Access Denied] User not authorized');
         if (adminShell) {
             adminShell.classList.add('hidden');
         }
@@ -77,6 +97,7 @@ function enforceAdminPageAccess() {
     if (adminShell) {
         adminShell.classList.remove('hidden');
     }
+    console.log('[Admin Access Granted] User authorized for admin panel');
     return true;
 }
 
@@ -253,33 +274,7 @@ function ensureCommerceUI() {
         </div>
     `);
 
-    ensureModalShell('profile-modal', `
-        <div class="modal-content max-w-2xl">
-            <div class="modal-header">
-                <h2 class="font-display text-2xl font-bold text-white">MON PROFIL</h2>
-                <button onclick="closeModal('profile-modal')" class="text-gray-400 hover:text-white text-2xl leading-none">X</button>
-            </div>
-            <div class="modal-body">
-                <div class="tabs">
-                    <button class="tab-btn active" data-tab="profile-info" onclick="switchTab('profile-info')">Informations</button>
-                    <button class="tab-btn" data-tab="purchase-history" onclick="switchTab('purchase-history')">Historique</button>
-                    <button class="tab-btn" data-tab="payment-methods" onclick="switchTab('payment-methods')">Moyen de paiement</button>
-                </div>
-                <div id="profile-info-tab" class="tab-content active">
-                    <p class="text-gray-300"><strong>Nom:</strong> <span id="profile-username">-</span></p>
-                    <p class="text-gray-300"><strong>Email:</strong> <span id="profile-email">-</span></p>
-                    <p class="text-gray-300"><strong>Membre depuis:</strong> <span id="profile-joined">-</span></p>
-                    <button onclick="handleLogout()" class="mt-4 btn-secondary px-4 py-2 rounded-lg">Déconnexion</button>
-                </div>
-                <div id="purchase-history-tab" class="tab-content">
-                    <div id="history-items" class="space-y-3"></div>
-                </div>
-                <div id="payment-methods-tab" class="tab-content">
-                    <div id="payment-methods-items" class="space-y-3"></div>
-                </div>
-            </div>
-        </div>
-    `);
+    // Profile modal is now defined in HTML pages, not generated dynamically
 }
 
 function ensureProfileModalStructure() {
@@ -386,8 +381,13 @@ function restoreSessionFromLocal() {
         const raw = localStorage.getItem('bonobo_currentUser');
         if (!raw) return false;
 
-        const parsedUser = JSON.parse(raw);
+        let parsedUser = JSON.parse(raw);
         if (!parsedUser || !parsedUser.userId) return false;
+
+        // Normalize email if present
+        if (parsedUser.email) {
+            parsedUser.email = parsedUser.email.toLowerCase().trim();
+        }
 
         currentUser = parsedUser;
         upsertLocalUser(parsedUser);
@@ -432,7 +432,14 @@ async function restoreSessionFromServer() {
             restoreSessionFromLocal();
             return;
         }
-        currentUser = data.user;
+        let userData = data.user;
+        
+        // Normalize email if present
+        if (userData.email) {
+            userData.email = userData.email.toLowerCase().trim();
+        }
+        
+        currentUser = userData;
         persistCurrentUserSnapshot(currentUser);
         upsertLocalUser(currentUser);
         try {
@@ -1162,35 +1169,11 @@ function completePurchase() {
     
     closeModal('payment-modal');
     showToast(langText('Commande validee. Merci pour votre achat!', 'Order confirmed. Thank you for your purchase!'));
-    renderPurchaseHistory();
 }
 
 // ==================== PURCHASE HISTORY ====================
 
-function renderPurchaseHistory() {
-    const container = document.getElementById('history-items');
-
-    if (purchaseHistory.length === 0) {
-        container.innerHTML = `<p class="text-gray-400 text-center py-8">${langText('Aucun historique d\'achat', 'No purchase history')}</p>`;
-        return;
-    }
-
-    container.innerHTML = purchaseHistory.map(purchase => {
-        const items = JSON.parse(purchase.items);
-        return `
-            <div class="p-4 rounded-lg bg-white/5 border border-white/10">
-                <div class="flex justify-between items-start mb-2">
-                    <div>
-                        <p class="text-white font-semibold">${items.map(i => i.title).join(', ')}</p>
-                        <p class="text-gray-400 text-sm">${new Date(purchase.date).toLocaleDateString('fr-FR')}</p>
-                    </div>
-                    <span class="text-white font-bold">${purchase.total} EUR</span>
-                </div>
-                ${purchase.promoCode ? `<p class="text-green-400 text-xs"><span class="promo-tag">${purchase.promoCode}</span></p>` : ''}
-            </div>
-        `;
-    }).join('');
-}
+// renderPurchaseHistory removed - history tab removed from profile
 
 // ==================== AUTHENTIFICATION ====================
 
@@ -1628,13 +1611,190 @@ function showProfile() {
 
     ensureProfileModalStructure();
 
-    document.getElementById('profile-username').textContent = currentUser.username;
-    document.getElementById('profile-email').textContent = currentUser.email;
+    // Remplir les champs
+    const usernameInput = document.getElementById('profile-username');
+    const emailInput = document.getElementById('profile-email');
+    const joinedDisplay = document.getElementById('profile-joined');
+    
+    if (usernameInput) {
+        usernameInput.value = currentUser.username || '';
+        usernameInput.disabled = true; // Désactivé par défaut
+    }
+    if (emailInput) {
+        emailInput.value = currentUser.email || '';
+        emailInput.disabled = true; // Désactivé par défaut
+    }
+    
     const joinedDate = currentUser.createdAt ? new Date(currentUser.createdAt).toLocaleDateString('fr-FR') : '-';
-    document.getElementById('profile-joined').textContent = joinedDate;
-    renderPurchaseHistory();
-    switchTab('profile-info');
+    if (joinedDisplay) joinedDisplay.textContent = joinedDate;
+    
+    // Masquer les messages d'erreur/succès
+    const errorEl = document.getElementById('profile-error');
+    const successEl = document.getElementById('profile-success');
+    if (errorEl) errorEl.classList.add('hidden');
+    if (successEl) successEl.classList.add('hidden');
+    
+    // Réinitialiser le bouton à "Modifier"
+    resetEditButton();
+    
     document.getElementById('profile-modal').classList.add('active');
+}
+
+function resetEditButton() {
+    const editBtn = document.getElementById('edit-profile-btn');
+    if (!editBtn) return;
+    
+    editBtn.innerHTML = `
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        </svg>
+        Modifier
+    `;
+    editBtn.onclick = toggleProfileEdit;
+}
+
+function toggleProfileEdit() {
+    const usernameInput = document.getElementById('profile-username');
+    const emailInput = document.getElementById('profile-email');
+    const editBtn = document.getElementById('edit-profile-btn');
+    const errorEl = document.getElementById('profile-error');
+    const successEl = document.getElementById('profile-success');
+    
+    if (!usernameInput || !emailInput || !editBtn) return;
+    
+    // Masquer les messages
+    if (errorEl) errorEl.classList.add('hidden');
+    if (successEl) successEl.classList.add('hidden');
+    
+    // Si actuellement en mode lecture, passer en mode édition
+    if (usernameInput.disabled) {
+        usernameInput.disabled = false;
+        emailInput.disabled = false;
+        usernameInput.focus();
+        
+        // Changer le bouton en "Sauvegarder"
+        editBtn.innerHTML = `
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            Sauvegarder
+        `;
+        editBtn.onclick = saveProfileChanges;
+    }
+}
+
+async function saveProfileChanges() {
+    if (!currentUser) return;
+    
+    const usernameInput = document.getElementById('profile-username');
+    const emailInput = document.getElementById('profile-email');
+    const errorEl = document.getElementById('profile-error');
+    const successEl = document.getElementById('profile-success');
+    const editBtn = document.getElementById('edit-profile-btn');
+    
+    // Masquer les messages précédents
+    if (errorEl) errorEl.classList.add('hidden');
+    if (successEl) successEl.classList.add('hidden');
+    
+    const newUsername = usernameInput?.value.trim() || '';
+    const newEmail = emailInput?.value.trim() || '';
+    
+    // Validation
+    if (!newUsername) {
+        if (errorEl) {
+            errorEl.textContent = 'Le nom d\'utilisateur ne peut pas être vide';
+            errorEl.classList.remove('hidden');
+        }
+        return;
+    }
+    
+    if (!newEmail || !newEmail.includes('@')) {
+        if (errorEl) {
+            errorEl.textContent = 'Veuillez entrer une adresse email valide';
+            errorEl.classList.remove('hidden');
+        }
+        return;
+    }
+    
+    // Vérifier si l'email est déjà utilisé par un autre utilisateur
+    const emailExists = allUsers.some(u => u.userId !== currentUser.userId && u.email === newEmail);
+    if (emailExists) {
+        if (errorEl) {
+            errorEl.textContent = 'Cet email est déjà utilisé par un autre compte';
+            errorEl.classList.remove('hidden');
+        }
+        return;
+    }
+    
+    // Désactiver le bouton pendant la sauvegarde
+    if (editBtn) {
+        editBtn.disabled = true;
+        editBtn.innerHTML = `
+            <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Sauvegarde...
+        `;
+    }
+    
+    try {
+        // Mettre à jour l'utilisateur
+        currentUser.username = newUsername;
+        currentUser.email = newEmail;
+        
+        // Sauvegarder localement
+        upsertLocalUser(currentUser);
+        persistCurrentUserSnapshot(currentUser);
+        
+        // Tenter de sauvegarder sur le serveur
+        try {
+            await fetch('/api?action=updateProfile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: currentUser.userId,
+                    sessionToken: currentSessionToken,
+                    username: newUsername,
+                    email: newEmail
+                })
+            });
+        } catch (e) {
+            console.log('Server update failed, saved locally only', e);
+        }
+        
+        // Mettre à jour l'interface
+        updateAuthUI();
+        
+        // Afficher le message de succès
+        if (successEl) {
+            successEl.textContent = '✓ Profil mis à jour avec succès';
+            successEl.classList.remove('hidden');
+            setTimeout(() => successEl.classList.add('hidden'), 3000);
+        }
+        
+        // Repasser en mode lecture
+        if (usernameInput) usernameInput.disabled = true;
+        if (emailInput) emailInput.disabled = true;
+        
+        // Réinitialiser le bouton "Modifier"
+        resetEditButton();
+        
+    } catch (error) {
+        if (errorEl) {
+            errorEl.textContent = 'Erreur lors de la sauvegarde';
+            errorEl.classList.remove('hidden');
+        }
+        // Réactiver le bouton en cas d'erreur
+        if (editBtn) {
+            editBtn.disabled = false;
+            editBtn.innerHTML = `
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Sauvegarder
+            `;
+        }
+    }
 }
 
 function closeModal(modalId) {
@@ -1944,8 +2104,13 @@ function normalizeHeroBubbleLinks() {
 // ==================== ADMIN PANEL FUNCTIONS ====================
 
 function isUserAdmin(email) {
+    if (!email) return false;
+    const normalizedEmail = email.toLowerCase().trim();
     const admins = getAdminList();
-    return admins.some(a => a.email === email);
+    return admins.some(a => {
+        const adminEmail = a.email ? a.email.toLowerCase().trim() : '';
+        return adminEmail === normalizedEmail;
+    });
 }
 
 // Tab switching
@@ -2016,26 +2181,27 @@ function loadAdminsManagement() {
 
 function promoteToAdmin() {
     const select = document.getElementById('user-to-promote');
-    const email = select.value;
+    const email = select.value ? select.value.toLowerCase().trim() : '';
     
     if (!email) {
         showToast('Veuillez sélectionner un utilisateur');
         return;
     }
     
-    const user = allUsers.find(u => u.email === email);
+    const user = allUsers.find(u => (u.email || '').toLowerCase().trim() === email);
     if (!user) {
         showToast('Utilisateur non trouvé');
         return;
     }
     
     const admins = getAdminList();
-    if (admins.some(a => a.email === email)) {
+    const normalizedEmail = email.toLowerCase().trim();
+    if (admins.some(a => (a.email || '').toLowerCase().trim() === normalizedEmail)) {
         showToast('Cet utilisateur est déjà admin');
         return;
     }
     
-    admins.push({ email: user.email, password: user.password });
+    admins.push({ email: normalizedEmail, password: user.password });
     saveAdminList(admins);
     
     showToast(`${email} a été promu admin`);
@@ -2043,7 +2209,10 @@ function promoteToAdmin() {
 }
 
 function removeAdmin(email) {
-    if (email === ADMIN_EMAIL) {
+    const normalizedEmail = email ? email.toLowerCase().trim() : '';
+    const mainAdminEmail = ADMIN_EMAIL.toLowerCase().trim();
+    
+    if (normalizedEmail === mainAdminEmail) {
         showToast('Impossible de retirer l\'admin principal');
         return;
     }
@@ -2053,7 +2222,7 @@ function removeAdmin(email) {
     }
     
     const admins = getAdminList();
-    const filtered = admins.filter(a => a.email !== email);
+    const filtered = admins.filter(a => (a.email || '').toLowerCase().trim() !== normalizedEmail);
     saveAdminList(filtered);
     
     showToast(`${email} n'est plus admin`);

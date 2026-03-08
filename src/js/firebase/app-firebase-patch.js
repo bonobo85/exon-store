@@ -34,7 +34,13 @@
             try {
                 const fbResult = await window.fbWrapper.login(email, password);
                 if (fbResult.success) {
-                    const user = fbResult.user;
+                    let user = fbResult.user;
+                    
+                    // Ensure email is normalized and trimmed
+                    if (user.email) {
+                        user.email = user.email.toLowerCase().trim();
+                    }
+                    
                     saveSessionToken(user.sessionToken || user.userId);
                     
                     // Merge cart items
@@ -127,7 +133,13 @@
             try {
                 const fbResult = await window.fbWrapper.register(email, password, username);
                 if (fbResult.success) {
-                    const newUser = fbResult.user;
+                    let newUser = fbResult.user;
+                    
+                    // Ensure email is normalized and trimmed
+                    if (newUser.email) {
+                        newUser.email = newUser.email.toLowerCase().trim();
+                    }
+                    
                     saveSessionToken(newUser.sessionToken || newUser.userId);
                     
                     currentUser = newUser;
@@ -258,7 +270,6 @@
                 
                 closeModal('payment-modal');
                 showToast('Commande validée. Merci pour votre achat!');
-                renderPurchaseHistory();
             }
         };
     }
@@ -273,7 +284,13 @@
         try {
             const fbResult = await window.fbWrapper.loginWithGoogle();
             if (fbResult.success) {
-                const user = fbResult.user;
+                let user = fbResult.user;
+                
+                // Ensure email is normalized and trimmed
+                if (user.email) {
+                    user.email = user.email.toLowerCase().trim();
+                }
+                
                 saveSessionToken(user.sessionToken || user.userId);
                 
                 // Merge cart items
