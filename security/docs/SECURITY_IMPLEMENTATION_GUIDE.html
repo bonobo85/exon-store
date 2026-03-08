@@ -262,7 +262,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) =&gt; 
     
     if (result.success) {
         console.log('Connecté:', result.user);
-        window.location.href = '/pages/home.html';
+        window.location.href = '/category/home.html';
     } else {
         alert(result.message);
     }
@@ -415,11 +415,11 @@ bruteForceProtection.getAttemptsLeft('email@test.com')</pre>
     <h2>1️⃣1️⃣ Exemples Complets</h2>
 
     <p><strong>Page d'exemple complète avec sécurité:</strong></p>
-    <p>Voir <code class="file-path">/pages/secure-example.html</code> pour un exemple complet et fonctionnel.</p>
+    <p>Voir <code class="file-path">/category/secure-example.html</code> pour un exemple complet et fonctionnel.</p>
 
     <h3>Pour tester:</h3>
-    <pre>1. Démarrer le serveur: node js/server.js
-2. Ouvrir: http://localhost:3000/pages/secure-example.html
+    <pre>1. Démarrer le serveur: node src/js/server.js
+2. Ouvrir: http://localhost:3000/category/secure-example.html
 3. Remplir le formulaire
 4. Vérifier la console (F12) pour les logs de sécurité</pre>
 

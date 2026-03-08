@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exon Store - Vêtements</title>
+    <title>Exon Store - Scripts</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -17,9 +17,9 @@
     <link rel="stylesheet" href="../css/styles.css">
     
     <!-- Translations -->
-    <script src="../../src/js/core/translations.js"></script>
+    <script src="../src/js/core/translations.js"></script>
 </head>
-<body class="h-full overflow-auto scrollbar-hide" data-page="clothes">
+<body class="h-full overflow-auto scrollbar-hide" data-page="scripts">
     <div class="min-h-full flex flex-col">
         <!-- Navigation -->
         <nav class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
@@ -34,8 +34,8 @@
                     <div class="hidden md:flex items-center gap-8">
                         <a href="index.html" class="nav-link font-medium">Accueil</a>
                         <a href="cars.html" class="nav-link font-medium">Cars</a>
-                        <a href="scripts.html" class="nav-link font-medium">Scripts</a>
-                        <a href="clothes.html" class="nav-link active font-medium">Clothes</a>
+                        <a href="scripts.html" class="nav-link active font-medium">Scripts</a>
+                        <a href="clothes.html" class="nav-link font-medium">Clothes</a>
                         <a href="templates.html" class="nav-link font-medium">Templates</a>
                         <a href="about.html" class="nav-link font-medium">About</a>
                         <a href="admin.html" class="nav-link font-medium admin-only-link hidden">Admin</a>
@@ -98,8 +98,8 @@
                 <div class="px-4 py-4 space-y-3">
                     <a href="index.html" class="block w-full text-left py-2 text-gray-400 hover:text-white">Accueil</a>
                     <a href="cars.html" class="block w-full text-left py-2 text-gray-400 hover:text-white">Cars</a>
-                    <a href="scripts.html" class="block w-full text-left py-2 text-gray-400 hover:text-white">Scripts</a>
-                    <a href="clothes.html" class="block w-full text-left py-2 text-white font-medium">Clothes</a>
+                    <a href="scripts.html" class="block w-full text-left py-2 text-white font-medium">Scripts</a>
+                    <a href="clothes.html" class="block w-full text-left py-2 text-gray-400 hover:text-white">Clothes</a>
                     <a href="templates.html" class="block w-full text-left py-2 text-gray-400 hover:text-white">Templates</a>
                     <a href="about.html" class="block w-full text-left py-2 text-gray-400 hover:text-white">About</a>
                     <a href="admin.html" class="block w-full text-left py-2 text-gray-400 hover:text-white admin-only-link hidden">Admin</a>
@@ -115,15 +115,15 @@
                 <div class="absolute inset-0 grid-pattern opacity-50"></div>
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div class="text-center mb-12">
-                        <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-4" data-i18n="page.clothes.title">NOS VÊTEMENTS</h2>
-                        <p class="text-gray-400 max-w-2xl mx-auto" data-i18n="page.clothes.desc">Vêtements et accessoires uniques pour personnaliser vos personnages</p>
+                        <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-4" data-i18n="page.scripts.title">NOS SCRIPTS</h2>
+                        <p class="text-gray-400 max-w-2xl mx-auto" data-i18n="page.scripts.desc">Scripts optimisés et performants pour votre serveur FiveM</p>
                     </div>
-                    <div id="clothes-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div id="scripts-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         <!-- Les produits sont inseres dynamiquement via JavaScript (app.js).
-                             Seuls les 3 premiers articles de la catégorie sont affichés par page.
+                             Seuls les 3 premiers articles de la categorie sont affiches par page.
                              Exemple de structure de carte de produit (ne pas supprimer) :
                              <div class="gradient-border rounded-2xl overflow-hidden card-hover group cursor-pointer">
-                                  voir createProductCard dans app.js -->
+                                 <!-- voir createProductCard dans app.js -->
                              </div>
                         
                     </div>
@@ -192,7 +192,7 @@
         </footer>
     </div>
     
-    <!-- Modals (identiques) -->
+    <!-- Modals (identiques  cars.html) -->
     <!-- Auth Modal -->
     <div id="auth-modal" class="modal">
         <div class="modal-content max-w-md">
@@ -401,7 +401,7 @@
                         </div>
                         <div id="product-meta" class="text-sm text-gray-400 mb-4"></div>
                         <div id="features-container" class="mb-6 hidden">
-                            <h4 class="font-bold text-white mb-2">Caractéristiques</h4>
+                            <h4 class="font-bold text-white mb-2">caracteristiques</h4>
                             <ul id="features-list" class="space-y-2 text-sm"></ul>
                         </div>
                         
@@ -427,11 +427,11 @@
     
     <!-- Scripts -->
     <!-- Firebase SDK -->
-    <script type="module" src="../../src/js/firebase/firebase-config.js"></script>
-    <script type="module" src="../../src/js/firebase/firebase-wrapper.js"></script>
-    <script src="../../src/js/core/data.js"></script>
-    <script src="../../src/js/core/app.js"></script>
-    <script src="../../src/js/firebase/app-firebase-patch.js"></script>
+    <script type="module" src="../src/js/firebase/firebase-config.js"></script>
+    <script type="module" src="../src/js/firebase/firebase-wrapper.js"></script>
+    <script src="../src/js/core/data.js"></script>
+    <script src="../src/js/core/app.js"></script>
+    <script src="../src/js/firebase/app-firebase-patch.js"></script>
     <script>
         // Fonction pour le menu mobile - CORRIGE
         function toggleMobileMenu(event) {
@@ -459,7 +459,7 @@
             }
 
             if (typeof renderProducts === 'function') {
-                renderProducts('clothes', 'clothes-grid');
+                renderProducts('scripts', 'scripts-grid');
             }
         });
 

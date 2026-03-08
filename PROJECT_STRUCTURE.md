@@ -6,8 +6,9 @@ Ce document décrit la nouvelle organisation logique du projet Exon Store.
 
 ```
 exon-store/
+├── index.html               # 🌐 Redirection principale (racine)
+│
 ├── public/                 # 🌐 Fichiers statiques publics (root du serveur)
-│   ├── index.html         # Redirection principale
 │   ├── pages/             # Pages HTML de l'application
 │   │   ├── index.html
 │   │   ├── home.html
@@ -42,8 +43,16 @@ exon-store/
 │           ├── security-middleware.js
 │           ├── security-utils.js
 │           └── api-integration.js
+│           └── server.js
 │
-├── security/              # 🔒 Sécurité & guides de conformité
+├── data/                  # 💾 Données JSON (racine)
+│   ├── users.json
+│   └── authLogs.json
+│
+├── config/                # ⚙️ Fichiers de configuration (racine)
+│   └── netlify.toml      # Configuration Netlify
+│
+├── security/              # 🔒 Sécurité & guides de conformité (racine)
 │   └── docs/
 │       ├── SECURITY_README.md
 │       ├── SECURITY_SUMMARY.md
@@ -52,7 +61,7 @@ exon-store/
 │       ├── SECURITY_IMPLEMENTATION_GUIDE.html
 │       └── PACKAGE_SECURITY_GUIDE.js
 │
-├── docs/                  # 📚 Documentation du projet
+├── docs/                  # 📚 Documentation du projet (racine)
 │   ├── deployment/        # Guides de déploiement
 │   │   ├── DEPLOYMENT_READY.md
 │   │   ├── NETLIFY_DEPLOY.md
@@ -65,18 +74,11 @@ exon-store/
 │       ├── README_STATUS.md
 │       └── PRE_DEPLOYMENT_CHECKLIST.md
 │
-├── config/                # ⚙️ Fichiers de configuration
-│   └── netlify.toml      # Configuration Netlify
-│
-├── data/                  # 💾 Données JSON
-│   ├── users.json
-│   └── authLogs.json
-│
 ├── netlify/              # 🚀 Fonctions Netlify (API serverless)
 │   └── functions/
 │       └── api.mjs
 │
-├── scripts/              # 🛠️ Scripts utilitaires
+├── scripts/              # 🛠️ Scripts utilitaires (racine)
 │   ├── verify-setup.sh
 │   └── verify-setup.bat
 │
@@ -84,7 +86,7 @@ exon-store/
 ├── .env.example          # Modèle des variables d'environnement
 ├── package.json          # Dépendances Node.js
 ├── CNAME                 # Configuration GitHub Pages
-├── netlify.toml          # Configuration Netlify
+├── PROJECT_STRUCTURE.md  # 📖 Ce fichier
 └── README.md             # Documentation principale
 ```
 
@@ -94,7 +96,7 @@ exon-store/
 1. Créer `public/pages/ma-page.html`
 2. Importer les scripts avec les nouveaux chemins:
    ```html
-   <link rel="stylesheet" href="../../public/css/styles.css">
+   <link rel="stylesheet" href="../css/styles.css">
    <script src="../../src/js/core/translations.js"></script>
    <script src="../../src/js/core/app.js"></script>
    ```
@@ -118,7 +120,7 @@ exon-store/
 Depuis une page dans `public/pages/`:
 ```javascript
 // Accéder aux styles
-<link rel="stylesheet" href="../../public/css/styles.css">
+<link rel="stylesheet" href="../css/styles.css">
 
 // Accéder aux scripts de base
 <script src="../../src/js/core/app.js"></script>
@@ -128,6 +130,22 @@ Depuis une page dans `public/pages/`:
 
 // Accéder aux utilitaires de sécurité
 <script src="../../src/js/security/security-utils.js"></script>
+
+// Navigation vers d'autres pages (relative)
+window.location.href = 'index.html';
+```
+
+Depuis la **racine** (`index.html` et app.js):
+```javascript
+// Redirection détectée automatiquement vers public/pages/
+// showCart() → redirige vers 'public/pages/cart.html'
+// viewProduct() → redirige vers 'public/pages/product-detail.html'
+
+// Accéder aux données
+fetch('/data/users.json')
+
+// Accéder à l'API
+fetch('/api?action=login')
 ```
 
 ## 📦 Migration depuis l'ancienne structure
@@ -144,13 +162,14 @@ Depuis une page dans `public/pages/`:
 | `docs/SECURITY_*.md` | `security/docs/SECURITY_*.md` |
 | `docs/*DEPLOYMENT*.md` | `docs/deployment/` |
 | `docs/*GUIDE*.md` | `docs/guides/` |
-| `netlify.toml` | `config/netlify.toml` |
+| `netlify.toml` (racine) | `config/netlify.toml` |
+| `data/` | `data/` (racine) |
 
 ### Mise à jour des imports
 
 Les chemins dans les fichiers HTML ont été automatiquement mis à jour vers:
 ```
-../css/styles.css       → ../../public/css/styles.css
+../css/styles.css       ✓ Correct (pointe vers public/css/)
 ../js/app.js            → ../../src/js/core/app.js
 ../js/firebase-*.js     → ../../src/js/firebase/firebase-*.js
 ../js/security-*.js     → ../../src/js/security/security-*.js
@@ -163,6 +182,7 @@ Les chemins dans les fichiers HTML ont été automatiquement mis à jour vers:
 ✅ **Scalabilité**: Facile d'ajouter de nouveaux modules
 ✅ **Sécurité**: Documentation & code de sécurité centralisés
 ✅ **Déploiement**: Configuration & guides accessibles
+✅ **Navigation**: Chemins de navigation mis à jour automatiquement
 
 ---
 

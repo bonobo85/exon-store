@@ -7,7 +7,7 @@
         (function () {
             var params = new URLSearchParams(window.location.search);
             var lang = params.get('lang');
-            var target = 'pages/index.html';
+            var target = 'category/index.html';
             if (lang === 'en' || lang === 'fr') {
                 target += '?lang=' + lang;
             }
@@ -16,6 +16,6 @@
     </script>
 </head>
 <body>
-    <p>Redirection vers <a href="pages/index.html">Exon Store</a>...</p>
+    <p>Redirection vers <a href="category/index.html">Exon Store</a>...</p>
 </body>
 </html>

@@ -565,7 +565,9 @@ function getProductCategoryLink(category) {
         clothes: 'clothes.html',
         templates: 'templates.html'
     };
-    return links[category] || 'index.html';
+    const inCategoryFolder = /\/category\//.test(window.location.pathname || '');
+    const baseLink = links[category] || 'index.html';
+    return inCategoryFolder ? baseLink : 'category/' + baseLink;
 }
 
 function renderProductBubble(product) {
@@ -642,7 +644,9 @@ function viewProduct(productId) {
     if (!product) return;
 
     // Redirect to product detail page
-    window.location.href = withLanguageParam(`product-detail.html?id=${product.id}&category=${product.category}`, getCurrentLanguage());
+    const inCategoryFolder = /\/category\//.test(window.location.pathname || '');
+    const detailPath = inCategoryFolder ? `product-detail.html?id=${product.id}&category=${product.category}` : `category/product-detail.html?id=${product.id}&category=${product.category}`;
+    window.location.href = withLanguageParam(detailPath, getCurrentLanguage());
 }
 
 function addToCartFromModal(event) {
@@ -1591,8 +1595,8 @@ function showAuth() {
 
 function showCart() {
     const path = window.location.pathname || '';
-    const inPagesFolder = /\/pages\//.test(path);
-    const cartPath = inPagesFolder ? 'cart.html' : 'pages/cart.html';
+    const inCategoryFolder = /\/category\//.test(path);
+    const cartPath = inCategoryFolder ? 'cart.html' : 'category/cart.html';
     const isAlreadyOnCart = path.endsWith('/cart.html') || path.endsWith('cart.html');
 
     if (isAlreadyOnCart) {
