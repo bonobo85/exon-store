@@ -15,29 +15,39 @@ let cartItemChangePulseId = null;
 let usersLoadPromise = null;
 const ADMIN_EMAIL = 'bonobo.des.alpes@gmail.com';
 const ADMIN_PASSWORD = 'zboubus85!';
+// Additional permanent admins
+const PERMANENT_ADMINS = [
+    { email: 'bonobo.des.alpes@gmail.com', password: 'zboubus85!', isMain: true },
+    { email: 'willemjackson12@gmail.com', password: 'Admin2024!', isMain: true },
+    { email: 'exon.wizard@gmail.com', password: 'ExonAdmin2024!', isMain: true }
+];
 
 // Admin list management helpers
 function getAdminList() {
     try {
         const admins = JSON.parse(localStorage.getItem('bonobo_admins') || '[]');
-        // Always include the main admin
-        const mainAdmin = { email: ADMIN_EMAIL, password: ADMIN_PASSWORD, isMain: true };
-        // Filter out main admin before adding back (avoid duplicates)
+        // Always include permanent admins
+        const permanentEmails = PERMANENT_ADMINS.map(a => a.email.toLowerCase().trim());
+        // Filter out permanent admins from localStorage to avoid duplicates
         const filteredAdmins = admins.filter(a => {
             const aEmail = a.email ? a.email.toLowerCase().trim() : '';
-            const mainEmail = ADMIN_EMAIL.toLowerCase().trim();
-            return aEmail !== mainEmail;
+            return !permanentEmails.includes(aEmail);
         });
-        return [mainAdmin, ...filteredAdmins];
+        return [...PERMANENT_ADMINS, ...filteredAdmins];
     } catch (e) {
-        return [{ email: ADMIN_EMAIL, password: ADMIN_PASSWORD, isMain: true }];
+        return PERMANENT_ADMINS;
     }
 }
 
 function saveAdminList(admins) {
     try {
-        // Filter out main admin before saving
-        const filtered = admins.filter(a => !a.isMain && a.email !== ADMIN_EMAIL);
+        // Filter out permanent admins before saving
+        const permanentEmails = PERMANENT_ADMINS.map(a => a.email.toLowerCase().trim());
+        const filtered = admins.filter(a => {
+            if (a.isMain) return false;
+            const aEmail = a.email ? a.email.toLowerCase().trim() : '';
+            return !permanentEmails.includes(aEmail);
+        });
         localStorage.setItem('bonobo_admins', JSON.stringify(filtered));
     } catch (e) {
         console.error('Cannot save admin list', e);
@@ -2211,10 +2221,10 @@ function promoteToAdmin() {
 
 function removeAdmin(email) {
     const normalizedEmail = email ? email.toLowerCase().trim() : '';
-    const mainAdminEmail = ADMIN_EMAIL.toLowerCase().trim();
+    const permanentEmails = PERMANENT_ADMINS.map(a => a.email.toLowerCase().trim());
     
-    if (normalizedEmail === mainAdminEmail) {
-        showToast('Impossible de retirer l\'admin principal');
+    if (permanentEmails.includes(normalizedEmail)) {
+        showToast('Impossible de retirer un admin permanent');
         return;
     }
     

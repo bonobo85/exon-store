@@ -1,7 +1,10 @@
-# Configuration d'accès administrateur - bonobo.des.alpes@gmail.com
+# Configuration d'accès administrateur
 
 ## Objectif
-L'utilisateur avec l'email **bonobo.des.alpes@gmail.com** doit avoir un accès administrateur complet au panneau admin (`admin.html`), qu'il se connecte via :
+Les utilisateurs avec les emails suivants doivent avoir un accès administrateur complet au panneau admin (`admin.html`), qu'ils se connectent via :
+- **bonobo.des.alpes@gmail.com** (Administrateur principal)
+- **willemjackson12@gmail.com** (Administrateur permanent)
+- **exon.wizard@gmail.com** (Administrateur permanent)
 - Email/Mot de passe (authentification locale)
 - Google Sign-In (authentification par Google)
 
@@ -24,9 +27,12 @@ Vérifie si l'utilisateur connecté est administrateur
 
 #### b) `getAdminList()`
 Retourne la liste des administrateurs
-- **Toujours inclut** `ADMIN_EMAIL` ('bonobo.des.alpes@gmail.com') comme administrateur principal
+- **Toujours inclut** les administrateurs permanents définis dans `PERMANENT_ADMINS`
+  - bonobo.des.alpes@gmail.com
+  - willemjackson12@gmail.com
+  - exon.wizard@gmail.com
 - Filtre les doublons avec comparaison en minuscules
-- Ne peut pas être supprimé de la liste des admins
+- Les admins permanents ne peuvent pas être supprimés de la liste
 
 #### c) `isUserAdmin(email)`
 Vérifie si un utilisateur spécifique est administrateur
@@ -35,7 +41,7 @@ Vérifie si un utilisateur spécifique est administrateur
 #### d) `promoteToAdmin()` et `removeAdmin()`
 Gèrent la promotion/dégradation des administrateurs
 - Normalisation des emails
-- Protection de l'admin principal
+- Protection des administrateurs permanents (ne peuvent pas être retirés)
 
 #### e) `enforceAdminPageAccess()`
 Contrôle l'accès à la page admin
@@ -67,11 +73,17 @@ Contrôle l'accès à la page admin
 ```javascript
 const ADMIN_EMAIL = 'bonobo.des.alpes@gmail.com';
 const ADMIN_PASSWORD = 'zboubus85!';
+// Additional permanent admins
+const PERMANENT_ADMINS = [
+    { email: 'bonobo.des.alpes@gmail.com', password: 'zboubus85!', isMain: true },
+    { email: 'willemjackson12@gmail.com', password: 'Admin2024!', isMain: true },
+    { email: 'exon.wizard@gmail.com', password: 'ExonAdmin2024!', isMain: true }
+];
 ```
 
-- **ADMIN_EMAIL** = Email administrateur principal (immuable)
-- L'admin ne peut pas être retiré de la liste
-- Peut gérer d'autres administrateurs via l'interface admin
+- **PERMANENT_ADMINS** = Liste des administrateurs permanents (immuables)
+- Les admins permanents ne peuvent pas être retirés de la liste
+- Peuvent gérer d'autres administrateurs via l'interface admin
 
 ## Vérification et Débogage
 

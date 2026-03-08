@@ -22,6 +22,12 @@ const jsonHeaders = {
 const SESSION_DURATION_DAYS = 14;
 const ADMIN_EMAIL = 'bonobo.des.alpes@gmail.com';
 const ADMIN_PASSWORD = 'zboubus85!';
+// Additional permanent admins
+const PERMANENT_ADMINS = [
+  { email: 'bonobo.des.alpes@gmail.com', password: 'zboubus85!' },
+  { email: 'willemjackson12@gmail.com', password: 'Admin2024!' },
+  { email: 'exon.wizard@gmail.com', password: 'ExonAdmin2024!' }
+];
 
 function response(statusCode, body) {
   return {
@@ -126,7 +132,12 @@ async function getUserBySession(sessionToken) {
 function isAdminUser(user) {
   if (!user) return false;
   const data = user.data ? user.data() : user;
-  return data.email === ADMIN_EMAIL && data.password === ADMIN_PASSWORD;
+  const normalizedEmail = (data.email || '').toLowerCase().trim();
+  
+  return PERMANENT_ADMINS.some(admin => 
+    admin.email.toLowerCase().trim() === normalizedEmail && 
+    admin.password === data.password
+  );
 }
 
 async function requireAdminBySession(sessionToken) {
