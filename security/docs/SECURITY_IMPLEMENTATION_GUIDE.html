@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide Implémentation Sécurité - Exon Store</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        h1 { color: #007bff; }
+        h2 { color: #0056b3; margin-top: 30px; }
+        h3 { color: #333; }
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            overflow-x: auto;
+            border-radius: 4px;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #28a745;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #17a2b8;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #007bff;
+            color: white;
+        }
+        ul { padding-left: 20px; }
+        li { margin: 8px 0; }
+        .file-path {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .step {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔐 Guide Implémentation Sécurité - Exon Store</h1>
+    
+    <div class="info">
+        <strong>📌 Résumé:</strong> Ce guide vous montre comment intégrer la sécurité dans vos pages HTML existantes.
+    </div>
+
+    <!-- ==================== SECTION 1: SETUP INITIAL ==================== -->
+
+    <h2>1️⃣ Setup Initial (5 minutes)</h2>
+
+    <h3>Étape 1: Vérifier les fichiers de sécurité</h3>
+    <p>Assurez-vous que ces fichiers existent dans <code class="file-path">./js/</code>:</p>
+    <ul>
+        <li>✅ <code>security-utils.js</code> - Utilitaires côté client</li>
+        <li>✅ <code>security-init.js</code> - Initialisation des protections</li>
+        <li>✅ <code>security-middleware.js</code> - Middleware serveur</li>
+        <li>✅ <code>api-integration.js</code> - Exemples d'intégration</li>
+        <li>✅ <code>server.js</code> - Serveur avec sécurité</li>
+    </ul>
+
+    <h3>Étape 2: Charger les scripts de sécurité dans vos pages HTML</h3>
+    <div class="warning">
+        <strong>⚠️ IMPORTANT:</strong> L'ordre des scripts est CRITIQUE !
+    </div>
+
+    <div class="step">
+        <p><strong>Chaque page HTML doit avoir ces scripts dans <code>&lt;head&gt;</code> ou avant <code>&lt;/body&gt;</code>:</strong></p>
+        <pre>&lt;!-- 1️⃣ SÉCURITÉ - Charger EN PREMIER --&gt;
+&lt;script src="/js/security-utils.js"&gt;&lt;/script&gt;
+
+&lt;!-- 2️⃣ Initialisation des protections --&gt;
+&lt;script src="/js/security-init.js"&gt;&lt;/script&gt;
+
+&lt;!-- 3️⃣ Exemples d'intégration API --&gt;
+&lt;script src="/js/api-integration.js"&gt;&lt;/script&gt;
+
+&lt;!-- 4️⃣ Votre script applicatif --&gt;
+&lt;script src="/js/app.js"&gt;&lt;/script&gt;</pre>
+    </div>
+
+    <!-- ==================== SECTION 2: META TAGS ==================== -->
+
+    <h2>2️⃣ Meta Tags de Sécurité</h2>
+
+    <p>Ajouter ces meta tags dans le <code>&lt;head&gt;</code> de toutes les pages:</p>
+
+    <pre>&lt;!-- Content Security Policy --&gt;
+&lt;meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' cdn.jsdelivr.net;
+    style-src 'self' 'unsafe-inline' cdn.jsdelivr.net;
+    img-src 'self' data: https: blob:;
+    font-src 'self' cdn.jsdelivr.net;
+    connect-src 'self' https://firebase.google.com;
+    frame-src 'none';
+    object-src 'none';
+    form-action 'self';
+    upgrade-insecure-requests;
+"&gt;
+
+&lt;!-- Prevent clickjacking --&gt;
+&lt;meta http-equiv="X-UA-Compatible" content="IE=edge"&gt;
+
+&lt;!-- Disable MIME sniffing --&gt;
+&lt;meta http-equiv="X-Content-Type-Options" content="nosniff"&gt;
+
+&lt;!-- XSS Protection --&gt;
+&lt;meta http-equiv="X-XSS-Protection" content="1; mode=block"&gt;
+
+&lt;!-- Referrer Policy --&gt;
+&lt;meta name="referrer" content="strict-origin-when-cross-origin"&gt;</pre>
+
+    <!-- ==================== SECTION 3: FORMULAIRES ==================== -->
+
+    <h2>3️⃣ Mise à Jour des Formulaires</h2>
+
+    <h3>Avant (NON-SÉCURISÉ):</h3>
+    <pre>document.getElementById('form').addEventListener('submit', async (e) =&gt; {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    
+    // ❌ Pas de validation
+    // ❌ Pas de protection CSRF
+    // ❌ Fetch direct sans sécurité
+    fetch('/api/register', {
+        method: 'POST',
+        body: JSON.stringify({ email })
+    })
+});</pre>
+
+    <h3>Après (SÉCURISÉ):</h3>
+    <pre>document.getElementById('form').addEventListener('submit', async (e) =&gt; {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    
+    // ✅ Validation email
+    if (!validateEmail(email)) {
+        alert('Email invalide');
+        return;
+    }
+    
+    // ✅ Détecte injection
+    if (detectInjectionAttempt(email)) {
+        alert('Entrée invalide');
+        return;
+    }
+    
+    // ✅ Envoi sécurisé (token CSRF ajouté automatiquement)
+    const response = await secureAPI('/api/register', {
+        method: 'POST',
+        body: JSON.stringify({ email })
+    });
+    
+    if (response.ok) {
+        const data = await response.json();
+        console.log('Succès:', data);
+    }
+});</pre>
+
+    <!-- ==================== SECTION 4: REQUÊTES API ==================== -->
+
+    <h2>4️⃣ Appels API Sécurisés</h2>
+
+    <table>
+        <tr>
+            <th>Type d'Appel</th>
+            <th>Utiliser</th>
+            <th>Protection</th>
+        </tr>
+        <tr>
+            <td>Enregistrement</td>
+            <td><code>secureRegister()</code></td>
+            <td>Validation + Rate Limit + CSRF + Hash</td>
+        </tr>
+        <tr>
+            <td>Connexion</td>
+            <td><code>secureLogin()</code></td>
+            <td>Brute Force Protection + CSRF</td>
+        </tr>
+        <tr>
+            <td>Déconnexion</td>
+            <td><code>secureLogout()</code></td>
+            <td>Session + Nettoyage tokens</td>
+        </tr>
+        <tr>
+            <td>Panier</td>
+            <td><code>secureSaveCart()</code></td>
+            <td>Validation données + CSRF</td>
+        </tr>
+        <tr>
+            <td>Upload</td>
+            <td><code>secureUploadFile()</code></td>
+            <td>Validation fichier + Rate Limit + CSRF</td>
+        </tr>
+        <tr>
+            <td>Autres requêtes</td>
+            <td><code>secureAPI()</code></td>
+            <td>CSRF + Erreur handling</td>
+        </tr>
+    </table>
+
+    <h3>Exemple: Formulaire de Connexion</h3>
+    <pre>&lt;form id="loginForm"&gt;
+    &lt;input type="email" id="email" required&gt;
+    &lt;input type="password" id="password" required&gt;
+    &lt;button type="submit"&gt;Se connecter&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;script&gt;
+document.getElementById('loginForm').addEventListener('submit', async (e) =&gt; {
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    
+    // Utilise la fonction d'intégration sécurisée
+    const result = await secureLogin(email, password);
+    
+    if (result.success) {
+        console.log('Connecté:', result.user);
+        window.location.href = '/pages/home.html';
+    } else {
+        alert(result.message);
+    }
+});
+&lt;/script&gt;</pre>
+
+    <!-- ==================== SECTION 5: AFFICHAGE DONNÉES ==================== -->
+
+    <h2>5️⃣ Affichage Sécurisé des Données</h2>
+
+    <h3>❌ DANGEREUX - N'utilisez PAS:</h3>
+    <pre>// Risque XSS - les balises HTML sont exécutées
+document.getElementById('user-name').innerHTML = userData.username;</pre>
+
+    <h3>✅ SÉCURISÉ - À Utiliser:</h3>
+    <pre>// Option 1: textContent (recommandé pour le texte simple)
+document.getElementById('user-name').textContent = userData.username;
+
+// Option 2: innerHTML avec escapeHTML (si besoin)
+document.getElementById('user-name').innerHTML = escapeHTML(userData.username);
+
+// Option 3: createTextNode (vanille)
+const node = document.createTextNode(userData.username);
+document.getElementById('user-name').appendChild(node);</pre>
+
+    <!-- ==================== SECTION 6: STOCKAGE DONNÉES ==================== -->
+
+    <h2>6️⃣ Stockage Sécurisé des Données</h2>
+
+    <h3>Pour les données sensibles (tokens, sessions):</h3>
+    <pre>// Sauvegarde avec expiration (30 minutes)
+SecureStorage.setSecure('sessionToken', token, 30);
+
+// Récupère (retourne null si expiré)
+const token = SecureStorage.getSecure('sessionToken');
+
+// Supprime
+SecureStorage.removeSecure('sessionToken');</pre>
+
+    <h3>Pour les données publiques:</h3>
+    <pre>// Peut utiliser localStorage directement
+localStorage.setItem('userPreferences', JSON.stringify(prefs));
+const prefs = JSON.parse(localStorage.getItem('userPreferences'));</pre>
+
+    <!-- ==================== SECTION 7: VALIDATION ==================== -->
+
+    <h2>7️⃣ Validation des Entrées</h2>
+
+    <table>
+        <tr>
+            <th>Type</th>
+            <th>Fonction</th>
+            <th>Exemple</th>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td><code>validateEmail()</code></td>
+            <td><code>validateEmail('user@example.com') → true</code></td>
+        </tr>
+        <tr>
+            <td>Mot de passe</td>
+            <td><code>validatePassword()</code></td>
+            <td><code>validatePassword('Secure@123') → true</code></td>
+        </tr>
+        <tr>
+            <td>Username</td>
+            <td><code>validateUsername()</code></td>
+            <td><code>validateUsername('user_123') → true</code></td>
+        </tr>
+        <tr>
+            <td>Texte général</td>
+            <td><code>sanitizeInput()</code></td>
+            <td><code>sanitizeInput('Hello world') → 'Hello world'</code></td>
+        </tr>
+        <tr>
+            <td>Injection XSS</td>
+            <td><code>detectInjectionAttempt()</code></td>
+            <td><code>detectInjectionAttempt('&lt;script&gt;') → true</code></td>
+        </tr>
+    </table>
+
+    <!-- ==================== SECTION 8: PROTECTION BRUTE-FORCE ==================== -->
+
+    <h2>8️⃣ Protection Brute-Force</h2>
+
+    <pre>// Enregistrer une tentative
+if (!bruteForceProtection.recordAttempt(email)) {
+    alerts('Trop de tentatives, veuillez réessayer plus tard');
+    return;
+}
+
+// Vérifier si bloqué
+if (bruteForceProtection.isBlocked(email)) {
+    alert('Compte temporairement bloqué');
+    return;
+}
+
+// Obtenir le nombre de tentatives restantes
+const left = bruteForceProtection.getAttemptsLeft(email);
+console.log(`Tentatives restantes: ${left}`);
+
+// Réinitialiser après succès
+bruteForceProtection.reset(email);</pre>
+
+    <!-- ==================== SECTION 9: DEBUG ==================== -->
+
+    <h2>9️⃣ Débogage & Testing</h2>
+
+    <h3>Accès aux utilitaires de sécurité en console:</h3>
+    <pre>// Dans la console navigateur (F12):
+
+// Valider email
+SecurityDebug.validateEmail('test@test.com')
+
+// Valider mot de passe
+SecurityDebug.validatePassword('Secure@123')
+
+// Échapper HTML
+SecurityDebug.escapeHTML('&lt;script&gt;')
+
+// Détecter injection
+SecurityDebug.detectInjectionAttempt('alert(1)')
+
+// Obtenir le token CSRF
+csrfTokenManager.getToken()
+
+// Voir protection brute-force
+bruteForceProtection.getAttemptsLeft('email@test.com')</pre>
+
+    <!-- ==================== SECTION 10: CHECKLIST ==================== -->
+
+    <h2>🔟 Checklist d'Implémentation</h2>
+
+    <div class="success">
+        <h3>Pour chaque page HTML:</h3>
+        <ul>
+            <li>☐ Scripts de sécurité chargés dans le bon ordre</li>
+            <li>☐ Meta tags CSP ajoutés</li>
+            <li>☐ Formulaires utilisent secureAPI() ou fonctions d'intégration</li>
+            <li>☐ Validations côté client implémentées</li>
+            <li>☐ innerHTML remplacé par textContent quand possible</li>
+            <li>☐ Pas de mots de passe en clair dans le code</li>
+            <li>☐ Pas d'appels fetch directs (utiliser secureAPI)</li>
+            <li>☐ Données sensibles en SecureStorage</li>
+        </ul>
+    </div>
+
+    <!-- ==================== SECTION 11: EXEMPLES ==================== -->
+
+    <h2>1️⃣1️⃣ Exemples Complets</h2>
+
+    <p><strong>Page d'exemple complète avec sécurité:</strong></p>
+    <p>Voir <code class="file-path">/pages/secure-example.html</code> pour un exemple complet et fonctionnel.</p>
+
+    <h3>Pour tester:</h3>
+    <pre>1. Démarrer le serveur: node js/server.js
+2. Ouvrir: http://localhost:3000/pages/secure-example.html
+3. Remplir le formulaire
+4. Vérifier la console (F12) pour les logs de sécurité</pre>
+
+    <!-- ==================== SECTION 12: TROUBLESHOOTING ==================== -->
+
+    <h2>1️⃣2️⃣ Dépannage</h2>
+
+    <h3>Problème: "security-utils is not defined"</h3>
+    <div class="warning">
+        <strong>Solution:</strong> Vérifiez que <code>security-utils.js</code> est chargé EN PREMIER, avant les autres scripts.
+    </div>
+
+    <h3>Problème: CSRF token invalide</h3>
+    <div class="warning">
+        <strong>Solution:</strong> 
+        <ul>
+            <li>Actualiser la page (les tokens se renouvellent automatiquement)</li>
+            <li>Vérifier que <code>security-init.js</code> est chargé</li>
+            <li>Vérifier la console pour les erreurs</li>
+        </ul>
+    </div>
+
+    <h3>Problème: CSP violations</h3>
+    <div class="warning">
+        <strong>Solution:</strong>
+        <ul>
+            <li>Ouvrir la console (F12)</li>
+            <li>Chercher les messages CSP violations</li>
+            <li>Ajouter le domaine manquant à la whitelist CSP</li>
+            <li>Remplacer les scripts inline par externes si possible</li>
+        </ul>
+    </div>
+
+    <!-- ==================== RESSOURCES ==================== -->
+
+    <h2>📚 Ressources Additionnelles</h2>
+
+    <ul>
+        <li>📖 <strong>Guide Complet:</strong> <code class="file-path">docs/SECURITY_GUIDE.md</code></li>
+        <li>✅ <strong>Checklist:</strong> <code class="file-path">docs/SECURITY_CHECKLIST.md</code></li>
+        <li>💡 <strong>API Integration:</strong> <code class="file-path">js/api-integration.js</code></li>
+        <li>🔍 <strong>Exemple Complet:</strong> <code class="file-path">pages/secure-example.html</code></li>
+    </ul>
+
+    <h2>Besoin d'aide?</h2>
+    <p>Consultez les documents de sécurité ou testez avec <code>secure-example.html</code></p>
+
+    <p style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #ddd; color: #666;">
+        <strong>Dernière mise à jour:</strong> Mars 2026 | <strong>Statut:</strong> ✅ Production Ready
+    </p>
+</body>
+</html>

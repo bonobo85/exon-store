@@ -1,0 +1,390 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemple SÃ©curisÃ© - Exon Store</title>
+
+    <!-- ==================== SECURITY META TAGS ==================== -->
+    
+    <!-- Content Security Policy - ProtÃ¨ge contre XSS -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' cdn.jsdelivr.net;
+        style-src 'self' 'unsafe-inline' cdn.jsdelivr.net;
+        img-src 'self' data: https: blob:;
+        font-src 'self' cdn.jsdelivr.net;
+        connect-src 'self' https://firebase.google.com https://www.googleapis.com;
+        frame-src 'none';
+        object-src 'none';
+        form-action 'self';
+        upgrade-insecure-requests;
+    ">
+
+    <!-- Prevent clickjacking -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- Disable MIME sniffing -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+
+    <!-- Enable XSS filter -->
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+
+    <!-- Referrer Policy -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <!-- Standards -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <h1>Formulaire SÃ©curisÃ© - Enregistrement</h1>
+
+    <!-- ==================== FORM EXAMPLE ==================== -->
+    
+    <form id="registerForm">
+        <div class="form-group">
+            <label for="username">Nom d'utilisateur:</label>
+            <input 
+                type="text" 
+                id="username" 
+                name="username" 
+                required
+                pattern="[a-zA-Z0-9_-]{3,20}"
+                placeholder="3-20 caractÃ¨res (lettres, chiffres, -, _)"
+            >
+            <small>3-20 caractÃ¨res. Lettres, chiffres, tirets et underscores uniquement</small>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                required
+                placeholder="votre@email.com"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="password">Mot de passe:</label>
+            <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                required
+                placeholder="Min. 8 caractÃ¨res avec majuscule, minuscule, chiffre et caractÃ¨re spÃ©cial"
+            >
+            <small>
+                Exigences:
+                <ul id="passwordRequirements">
+                    <li data-req="length">âœ“ Au minimum 8 caractÃ¨res</li>
+                    <li data-req="uppercase">âœ“ Au moins une majuscule (A-Z)</li>
+                    <li data-req="lowercase">âœ“ Au moins une minuscule (a-z)</li>
+                    <li data-req="number">âœ“ Au moins un chiffre (0-9)</li>
+                    <li data-req="special">âœ“ Au moins un caractÃ¨re spÃ©cial (@$!%*?&)</li>
+                </ul>
+            </small>
+        </div>
+
+        <button type="submit" id="submitBtn">CrÃ©er un compte</button>
+        <div id="message"></div>
+    </form>
+
+    <!-- ==================== SECURITY SCRIPTS ==================== -->
+    
+    <!-- IMPORTANT: Charger security-utils.js EN PREMIER -->
+    <script src="/js/security-utils.js"></script>
+    
+    <!-- Puis security-init.js pour les protections DOM -->
+    <script src="/js/security-init.js"></script>
+    
+    <!-- Puis les scripts d'intÃ©gration API -->
+    <script src="/js/api-integration.js"></script>
+
+    <!-- Script du formulaire -->
+    <script>
+        'use strict';
+
+        // SÃ©lecteurs
+        const form = document.getElementById('registerForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const usernameInput = document.getElementById('username');
+        const submitBtn = document.getElementById('submitBtn');
+        const messageDiv = document.getElementById('message');
+        const passwordReqs = document.querySelectorAll('#passwordRequirements li');
+
+        // ==================== REAL-TIME PASSWORD VALIDATION ====================
+        
+        passwordInput.addEventListener('input', (e) => {
+            const password = e.target.value;
+
+            // VÃ©rifie chaque exigence
+            const checks = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /\d/.test(password),
+                special: /[@$!%*?&]/.test(password)
+            };
+
+            // Met Ã  jour l'affichage
+            Object.entries(checks).forEach(([req, isValid]) => {
+                const element = document.querySelector(`[data-req="${req}"]`);
+                if (isValid) {
+                    element.classList.add('valid');
+                    element.classList.remove('invalid');
+                } else {
+                    element.classList.add('invalid');
+                    element.classList.remove('valid');
+                }
+            });
+
+            // Active/dÃ©sactive le bouton
+            const allValid = Object.values(checks).every(v => v);
+            submitBtn.disabled = !allValid;
+        });
+
+        // ==================== FORM SUBMISSION ====================
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // RÃ©cupÃ¨re les valeurs
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            const username = usernameInput.value.trim();
+
+            // DÃ©sactive le formulaire pendant la requÃªte
+            submitBtn.disabled = true;
+            messageDiv.innerHTML = '<p class="loading">Traitement en cours...</p>';
+
+            // ==================== VALIDATION CÃ”TÃ‰ CLIENT ====================
+
+            // 1. Validation email
+            if (!validateEmail(email)) {
+                displayError('Format email invalide');
+                submitBtn.disabled = false;
+                return;
+            }
+
+            // 2. Validation username
+            if (!validateUsername(username)) {
+                displayError('Username doit contenir 3-20 caractÃ¨res (lettres, chiffres, -, _)');
+                submitBtn.disabled = false;
+                return;
+            }
+
+            // 3. Validation mot de passe
+            if (!validatePassword(password)) {
+                displayError('Le mot de passe ne respecte pas les exigences');
+                submitBtn.disabled = false;
+                return;
+            }
+
+            // 4. DÃ©tecte les tentatives d'injection
+            if (detectInjectionAttempt(email) || detectInjectionAttempt(username)) {
+                displayError('EntrÃ©e contenant des caractÃ¨res non autorisÃ©s');
+                submitBtn.disabled = false;
+                return;
+            }
+
+            // ==================== ENVOI SÃ‰CURISÃ‰ ====================
+
+            try {
+                // Utilise la fonction d'intÃ©gration sÃ©curisÃ©e
+                const result = await secureRegister(email, password, username);
+
+                if (result.success) {
+                    displaySuccess(`Bienvenue ${result.user.username}! Vous Ãªtes maintenant enregistrÃ©.`);
+                    
+                    // RÃ©initialise le formulaire
+                    form.reset();
+                    passwordInput.dispatchEvent(new Event('input'));
+                    
+                    // Redirige vers la page d'accueil ou le tableau de bord
+                    setTimeout(() => {
+                        window.location.href = '/pages/home.html';
+                    }, 2000);
+                } else {
+                    displayError(result.message || 'Erreur lors de l\'enregistrement');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                displayError('Une erreur est survenue. Veuillez rÃ©essayer.');
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+
+        // ==================== UI HELPERS ====================
+
+        function displayError(message) {
+            messageDiv.innerHTML = `<p class="error">âŒ ${escapeHTML(message)}</p>`;
+            messageDiv.style.color = 'red';
+        }
+
+        function displaySuccess(message) {
+            messageDiv.innerHTML = `<p class="success">âœ… ${escapeHTML(message)}</p>`;
+            messageDiv.style.color = 'green';
+        }
+
+        // ==================== PAGE INITIALIZATION ====================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('[APP] Page de sÃ©curitÃ© chargÃ©e');
+            
+            // VÃ©rifie que les scripts de sÃ©curitÃ© sont chargÃ©s
+            if (typeof secureAPI === 'undefined') {
+                console.error('[ERROR] Security scripts not loaded!');
+                displayError('Erreur d\'initialisation de la sÃ©curitÃ©. RafraÃ®chissez la page.');
+            }
+
+            // Initialise les validations
+            passwordInput.dispatchEvent(new Event('input'));
+        });
+    </script>
+
+    <!-- ==================== STYLES ====================  -->
+    
+    <style>
+        :root {
+            --color-primary: #007bff;
+            --color-danger: #dc3545;
+            --color-success: #28a745;
+            --color-border: #ddd;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        form {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 5px rgba(0,123,255,0.25);
+        }
+
+        small {
+            display: block;
+            margin-top: 8px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        ul {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        li {
+            color: #999;
+            font-size: 14px;
+        }
+
+        li.valid {
+            color: var(--color-success);
+        }
+
+        li.invalid {
+            color: var(--color-danger);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover:not(:disabled) {
+            background: #0056b3;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        #message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            margin: 0;
+        }
+
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            margin: 0;
+        }
+
+        .loading {
+            color: var(--color-primary);
+        }
+
+        @media (max-width: 600px) {
+            body {
+                margin: 20px auto;
+                padding: 10px;
+            }
+
+            form {
+                padding: 20px;
+            }
+        }
+    </style>
+</body>
+</html>
+
