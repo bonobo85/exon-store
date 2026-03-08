@@ -879,8 +879,8 @@ function renderAdminMembers(members) {
     }
     container.innerHTML = members.map(m => `
         <div class="p-3 rounded-lg bg-white/5 border border-white/10 mb-2">
-            <p class="text-white text-sm font-semibold">${m.username} (${m.email})</p>
-            <p class="text-gray-400 text-xs">Inscrit le ${m.createdAt ? new Date(m.createdAt).toLocaleDateString('fr-FR') : '-'} - ${m.purchaseCount || 0} achat(s)</p>
+            <p class="text-white text-sm font-semibold">${m.email}</p>
+            <p class="text-gray-400 text-xs">Inscrit le ${m.createdAt ? new Date(m.createdAt).toLocaleDateString('fr-FR') : '-'}</p>
         </div>
     `).join('');
 }
@@ -921,15 +921,12 @@ async function loadAdminDashboard() {
         if (!res.ok) return;
         const data = await res.json();
 
-        const totalRevenue = document.getElementById('admin-total-revenue');
         const activeNow = document.getElementById('admin-active-now');
         const totalMembers = document.getElementById('admin-total-members');
 
-        if (totalRevenue) totalRevenue.textContent = `${Number(data.summary?.totalRevenue || 0).toFixed(2)} EUR`;
         if (activeNow) activeNow.textContent = String(data.summary?.activeNow || 0);
         if (totalMembers) totalMembers.textContent = String(data.summary?.totalMembers || 0);
 
-        renderAdminPurchases(data.purchases || []);
         renderAdminMembers(data.members || []);
         renderActiveUsersChart(data.activeTimeline || []);
     } catch (e) {
@@ -2290,13 +2287,7 @@ function getAllProductsWithCustom() {
 }
 
 function loadProductsManagement() {
-    const totalProducts = document.getElementById('admin-total-products');
-    if (totalProducts) {
-        const allProds = getAllProductsWithCustom();
-        const count = Object.values(allProds).flat().length;
-        totalProducts.textContent = count;
-    }
-    
+    // Products management - no need to update total products stat anymore
     filterProducts();
 }
 
