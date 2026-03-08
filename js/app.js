@@ -1764,6 +1764,23 @@ function updateDocumentTitleByLanguage(lang) {
     }
 }
 
+function normalizeHeroBubbleLinks() {
+    const leftBubble = document.querySelector('.hero-bubble-left');
+    const rightBubble = document.querySelector('.hero-bubble-right');
+    if (!leftBubble && !rightBubble) return;
+
+    const lang = getCurrentLanguage();
+    if (leftBubble) {
+        leftBubble.setAttribute('href', withLanguageParam('cars.html', lang));
+        leftBubble.setAttribute('aria-label', lang === 'en' ? 'View Cars collection' : 'Voir la collection Cars');
+    }
+
+    if (rightBubble) {
+        rightBubble.setAttribute('href', withLanguageParam('clothes.html', lang));
+        rightBubble.setAttribute('aria-label', lang === 'en' ? 'View Clothes collection' : 'Voir la collection Clothes');
+    }
+}
+
 // Toggle language menu visibility
 function toggleLanguageMenu() {
     const menu = document.getElementById('language-menu');
@@ -1823,6 +1840,7 @@ function applyFullLanguageState(lang) {
     updateLanguageMenuDisplay();
     updateLanguageToggleLabel();
     persistLanguageInInternalLinks(targetLang);
+    normalizeHeroBubbleLinks();
     updateDocumentTitleByLanguage(targetLang);
 }
 
