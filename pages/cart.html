@@ -12,6 +12,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="../css/styles.css">
+    
+    <!-- Translations -->
+    <script src="../js/translations.js"></script>
 </head>
 <body class="h-full overflow-auto scrollbar-hide">
     <div class="min-h-full flex flex-col">
@@ -41,6 +44,23 @@
                                 <input type="text" id="search-input-nav" placeholder="Rechercher un produit...">
                             </div>
                             <div class="search-results-dropdown" id="search-results-dropdown"></div>
+                        </div>
+
+                        <!-- Language Selector -->
+                        <div class="relative group">
+                            <button onclick="toggleLanguageMenu()" class="p-2 text-gray-400 hover:text-white transition-colors rounded-lg hover:bg-white/10">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 00.948-.684l1.498-4.493a1 1 0 011.502-.684l1.498 4.493a1 1 0 00.948.684H19a2 2 0 012 2v1M3 5v14a2 2 0 002 2h14a2 2 0 002-2V5m-5 5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                            </button>
+                            <div id="language-menu" class="hidden absolute right-0 mt-2 w-32 bg-black/95 border border-white/20 rounded-lg shadow-lg z-50">
+                                <button onclick="switchLanguageTo('fr')" class="w-full px-4 py-2 text-left text-gray-300 hover:bg-white/10 hover:text-white transition-colors first:rounded-t-lg language-option" data-lang="fr">
+                                    🇫🇷 Français
+                                </button>
+                                <button onclick="switchLanguageTo('en')" class="w-full px-4 py-2 text-left text-gray-300 hover:bg-white/10 hover:text-white transition-colors last:rounded-b-lg language-option" data-lang="en">
+                                    EN English
+                                </button>
+                            </div>
                         </div>
 
                         <button onclick="showCart()" class="relative p-2 text-white transition-colors">
@@ -243,4 +263,6 @@
     </script>
 </body>
 </html>
+
+
 

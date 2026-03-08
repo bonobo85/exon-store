@@ -15,6 +15,9 @@
     
     <!-- Styles -->
     <link rel="stylesheet" href="../css/styles.css">
+    
+    <!-- Translations -->
+    <script src="../js/translations.js"></script>
 </head>
 <body class="h-full overflow-auto scrollbar-hide">
     <div class="min-h-full flex flex-col">
@@ -49,6 +52,23 @@
                                 <input type="text" id="search-input-nav" placeholder="Rechercher un produit...">
                             </div>
                             <div class="search-results-dropdown" id="search-results-dropdown"></div>
+                        </div>
+                        
+                        <!-- Language Selector -->
+                        <div class="relative group">
+                            <button onclick="toggleLanguageMenu()" class="p-2 text-gray-400 hover:text-white transition-colors rounded-lg hover:bg-white/10">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 00.948-.684l1.498-4.493a1 1 0 011.502-.684l1.498 4.493a1 1 0 00.948.684H19a2 2 0 012 2v1M3 5v14a2 2 0 002 2h14a2 2 0 002-2V5m-5 5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                            </button>
+                            <div id="language-menu" class="hidden absolute right-0 mt-2 w-32 bg-black/95 border border-white/20 rounded-lg shadow-lg z-50">
+                                <button onclick="switchLanguageTo('fr')" class="w-full px-4 py-2 text-left text-gray-300 hover:bg-white/10 hover:text-white transition-colors first:rounded-t-lg language-option" data-lang="fr">
+                                    🇫🇷 Français
+                                </button>
+                                <button onclick="switchLanguageTo('en')" class="w-full px-4 py-2 text-left text-gray-300 hover:bg-white/10 hover:text-white transition-colors last:rounded-b-lg language-option" data-lang="en">
+                                    EN English
+                                </button>
+                            </div>
                         </div>
                         
                         <!-- Cart -->
@@ -95,44 +115,44 @@
                 <div class="absolute inset-0 grid-pattern opacity-30"></div>
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div class="text-center mb-12">
-                        <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-4">NOS VÉHICULES</h2>
-                        <p class="text-gray-400 max-w-2xl mx-auto">Découvrez notre collection exclusive de modèles de voitures pour FiveM</p>
+                        <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-4" data-i18n="page.cars.title">NOS VÉHICULES</h2>
+                        <p class="text-gray-400 max-w-2xl mx-auto" data-i18n="page.cars.desc">Découvrez notre collection exclusive de modèles de voitures pour FiveM</p>
                     </div>
                     <div class="mb-8">
                         <div id="cars-category-nav" class="flex flex-wrap items-center justify-center gap-2 md:gap-3">
-                            <button type="button" data-car-tag="civil" class="car-filter-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-white/15 bg-white text-black">Civil</button>
-                            <button type="button" data-car-tag="police" class="car-filter-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-white/15 text-gray-300 hover:text-white hover:border-white/30 transition-colors" id="police-main-btn">Police</button>
-                            <button type="button" data-car-tag="ambulance" class="car-filter-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-white/15 text-gray-300 hover:text-white hover:border-white/30 transition-colors" id="ambulance-main-btn">Ambulance</button>
-                            <button type="button" data-car-tag="pack" class="car-filter-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-white/15 text-gray-300 hover:text-white hover:border-white/30 transition-colors">Pack</button>
-                            <button type="button" data-car-tag="seasonal" class="car-filter-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-white/15 text-gray-300 hover:text-white hover:border-white/30 transition-colors">Seasonal</button>
-                            <button type="button" data-car-tag="free" class="car-filter-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-white/15 text-gray-300 hover:text-white hover:border-white/30 transition-colors">Free</button>
+                            <button type="button" data-car-tag="civil" class="car-filter-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-white/15 bg-white text-black" data-i18n="page.filter.civil">Civil</button>
+                            <button type="button" data-car-tag="police" class="car-filter-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-white/15 text-gray-300 hover:text-white hover:border-white/30 transition-colors" id="police-main-btn" data-i18n="page.filter.police">Police</button>
+                            <button type="button" data-car-tag="ambulance" class="car-filter-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-white/15 text-gray-300 hover:text-white hover:border-white/30 transition-colors" id="ambulance-main-btn" data-i18n="page.filter.ambulance">Ambulance</button>
+                            <button type="button" data-car-tag="pack" class="car-filter-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-white/15 text-gray-300 hover:text-white hover:border-white/30 transition-colors" data-i18n="page.filter.pack">Pack</button>
+                            <button type="button" data-car-tag="seasonal" class="car-filter-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-white/15 text-gray-300 hover:text-white hover:border-white/30 transition-colors" data-i18n="page.filter.seasonal">Seasonal</button>
+                            <button type="button" data-car-tag="free" class="car-filter-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-white/15 text-gray-300 hover:text-white hover:border-white/30 transition-colors" data-i18n="page.filter.free">Free</button>
                         </div>
                         
                         <!-- Police Subcategories Container -->
                         <div id="police-subcategories" class="flex flex-wrap items-center justify-center gap-2 md:gap-3">
                             <button type="button" class="police-subcategory-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-blue-500/50 text-blue-300 hover:text-white hover:border-blue-400 hover:bg-blue-500/10 transition-colors" data-police-subcategory="glasslight-marked">
                                 <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                                Glasslight Marked
+                                <span data-i18n="page.sub.glasslight_marked">Glasslight Marked</span>
                             </button>
                             <button type="button" class="police-subcategory-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-blue-500/50 text-blue-300 hover:text-white hover:border-blue-400 hover:bg-blue-500/10 transition-colors" data-police-subcategory="glasslight-unmarked">
                                 <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-                                Glasslight Unmarked
+                                <span data-i18n="page.sub.glasslight_unmarked">Glasslight Unmarked</span>
                             </button>
                             <button type="button" class="police-subcategory-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-blue-500/50 text-blue-300 hover:text-white hover:border-blue-400 hover:bg-blue-500/10 transition-colors" data-police-subcategory="els-marked">
                                 <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                                ELS Marked
+                                <span data-i18n="page.sub.els_marked">ELS Marked</span>
                             </button>
                             <button type="button" class="police-subcategory-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-blue-500/50 text-blue-300 hover:text-white hover:border-blue-400 hover:bg-blue-500/10 transition-colors" data-police-subcategory="els-unmarked">
                                 <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-                                ELS Unmarked
+                                <span data-i18n="page.sub.els_unmarked">ELS Unmarked</span>
                             </button>
                             <button type="button" class="police-subcategory-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-blue-500/50 text-blue-300 hover:text-white hover:border-blue-400 hover:bg-blue-500/10 transition-colors" data-police-subcategory="non-els-marked">
                                 <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                                Non-ELS Marked
+                                <span data-i18n="page.sub.non_els_marked">Non-ELS Marked</span>
                             </button>
                             <button type="button" class="police-subcategory-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-blue-500/50 text-blue-300 hover:text-white hover:border-blue-400 hover:bg-blue-500/10 transition-colors" data-police-subcategory="non-els-unmarked">
                                 <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-                                Non-ELS Unmarked
+                                <span data-i18n="page.sub.non_els_unmarked">Non-ELS Unmarked</span>
                             </button>
                         </div>
                         
@@ -140,27 +160,27 @@
                         <div id="ambulance-subcategories" class="flex flex-wrap items-center justify-center gap-2 md:gap-3">
                             <button type="button" class="ambulance-subcategory-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-red-500/50 text-red-300 hover:text-white hover:border-red-400 hover:bg-red-500/10 transition-colors" data-ambulance-subcategory="glasslight-marked">
                                 <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                                Glasslight Marked
+                                <span data-i18n="page.sub.glasslight_marked">Glasslight Marked</span>
                             </button>
                             <button type="button" class="ambulance-subcategory-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-red-500/50 text-red-300 hover:text-white hover:border-red-400 hover:bg-red-500/10 transition-colors" data-ambulance-subcategory="glasslight-unmarked">
                                 <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-                                Glasslight Unmarked
+                                <span data-i18n="page.sub.glasslight_unmarked">Glasslight Unmarked</span>
                             </button>
                             <button type="button" class="ambulance-subcategory-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-red-500/50 text-red-300 hover:text-white hover:border-red-400 hover:bg-red-500/10 transition-colors" data-ambulance-subcategory="els-marked">
                                 <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                                ELS Marked
+                                <span data-i18n="page.sub.els_marked">ELS Marked</span>
                             </button>
                             <button type="button" class="ambulance-subcategory-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-red-500/50 text-red-300 hover:text-white hover:border-red-400 hover:bg-red-500/10 transition-colors" data-ambulance-subcategory="els-unmarked">
                                 <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-                                ELS Unmarked
+                                <span data-i18n="page.sub.els_unmarked">ELS Unmarked</span>
                             </button>
                             <button type="button" class="ambulance-subcategory-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-red-500/50 text-red-300 hover:text-white hover:border-red-400 hover:bg-red-500/10 transition-colors" data-ambulance-subcategory="non-els-marked">
                                 <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                                Non-ELS Marked
+                                <span data-i18n="page.sub.non_els_marked">Non-ELS Marked</span>
                             </button>
                             <button type="button" class="ambulance-subcategory-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-red-500/50 text-red-300 hover:text-white hover:border-red-400 hover:bg-red-500/10 transition-colors" data-ambulance-subcategory="non-els-unmarked">
                                 <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-                                Non-ELS Unmarked
+                                <span data-i18n="page.sub.non_els_unmarked">Non-ELS Unmarked</span>
                             </button>
                         </div>
                         
@@ -168,19 +188,19 @@
                         <div id="seasonal-subcategories" class="flex flex-wrap items-center justify-center gap-2 md:gap-3">
                             <button type="button" class="seasonal-subcategory-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-green-500/50 text-green-300 hover:text-white hover:border-green-400 hover:bg-green-500/10 transition-colors" data-seasonal-subcategory="spring">
                                 <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-1.1 0-2-.9-2-2h4c0 1.1-.9 2-2 2zm5-3H7v-1l1-1v-4.5C8 8.01 9.79 6.01 12 6.01s4 2 4 4.49V15l1 1v1z"/></svg>
-                                Printemps
+                                <span data-i18n="page.season.spring">Printemps</span>
                             </button>
                             <button type="button" class="seasonal-subcategory-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-yellow-500/50 text-yellow-300 hover:text-white hover:border-yellow-400 hover:bg-yellow-500/10 transition-colors" data-seasonal-subcategory="summer">
                                 <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .38-.38.39-1.02 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .38-.38.39-1.02 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41.39.38 1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41.39.38 1.03.39 1.41 0l1.06-1.06z"/></svg>
-                                Été
+                                <span data-i18n="page.season.summer">Été</span>
                             </button>
                             <button type="button" class="seasonal-subcategory-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-orange-500/50 text-orange-300 hover:text-white hover:border-orange-400 hover:bg-orange-500/10 transition-colors" data-seasonal-subcategory="autumn">
                                 <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z"/></svg>
-                                Automne
+                                <span data-i18n="page.season.autumn">Automne</span>
                             </button>
                             <button type="button" class="seasonal-subcategory-btn px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold border border-cyan-500/50 text-cyan-300 hover:text-white hover:border-cyan-400 hover:bg-cyan-500/10 transition-colors" data-seasonal-subcategory="winter">
                                 <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M22 11h-4.17l3.24-3.24-1.41-1.42L15 11h-2V9l4.66-4.66-1.42-1.41L13 6.17V2h-2v4.17L7.76 2.93 6.34 4.34 11 9v2H9L4.34 6.34 2.93 7.76 6.17 11H2v2h4.17l-3.24 3.24 1.41 1.42L9 13h2v2l-4.66 4.66 1.42 1.41L11 17.83V22h2v-4.17l3.24 3.24 1.42-1.41L13 15v-2h2l4.66 4.66 1.41-1.42L17.83 13H22v-2z"/></svg>
-                                Hiver
+                                <span data-i18n="page.season.winter">Hiver</span>
                             </button>
                         </div>
                     </div>
@@ -206,12 +226,12 @@
                         <div class="flex items-center gap-3 mb-4">
                             <span class="font-display text-xl font-bold text-white">EXON</span>
                         </div>
-                        <p class="text-gray-400 text-sm max-w-md">Votre source de confiance pour des ressources FiveM de haute qualité. Scripts, vêtements et templates pour créer le serveur parfait.</p>
+                        <p class="text-gray-400 text-sm max-w-md" data-i18n="page.footer.brand_desc">Votre source de confiance pour des ressources FiveM de haute qualité. Scripts, vêtements et templates pour créer le serveur parfait.</p>
                     </div>
                     
                     <!-- Links -->
                     <div>
-                        <h4 class="font-bold text-white mb-4">Navigation</h4>
+                        <h4 class="font-bold text-white mb-4" data-i18n="page.footer.navigation">Navigation</h4>
                         <ul class="space-y-2">
                             <li><a href="index.html" class="text-gray-400 hover:text-white text-sm transition-colors">Accueil</a></li>
                             <li><a href="cars.html" class="text-gray-400 hover:text-white text-sm transition-colors">Cars</a></li>
@@ -224,17 +244,17 @@
                     
                     <!-- Support -->
                     <div>
-                        <h4 class="font-bold text-white mb-4">Support</h4>
+                        <h4 class="font-bold text-white mb-4" data-i18n="page.footer.support">Support</h4>
                         <ul class="space-y-2">
                             <li><a href="https://discord.com/invite/c9cKtrwMrs" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white text-sm transition-colors">Discord</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Documentation</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Conditions</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors" data-i18n="page.footer.documentation">Documentation</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors" data-i18n="page.footer.terms">Conditions</a></li>
                         </ul>
                     </div>
                 </div>
                 
                 <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <p class="text-gray-500 text-sm">© 2026 Exon. Tous droits réservés.</p>
+                    <p class="text-gray-500 text-sm" data-i18n="page.footer.rights">© 2026 Exon. Tous droits réservés.</p>
                     <div class="flex items-center gap-4">
                         <a href="https://discord.com/invite/c9cKtrwMrs" target="_blank" rel="noopener noreferrer" class="text-[#5865F2] hover:text-[#7B86FF] transition-colors">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -263,36 +283,36 @@
     <div id="auth-modal" class="modal">
         <div class="modal-content max-w-md">
             <div class="modal-header">
-                <h2 class="font-display text-2xl font-bold text-white">CONNEXION</h2>
+                <h2 class="font-display text-2xl font-bold text-white" data-i18n="auth.title">Connexion / Inscription</h2>
                 <button onclick="closeModal('auth-modal')" class="text-gray-400 hover:text-white text-2xl leading-none">X</button>
             </div>
             <div class="modal-body">
                 <div class="tabs">
-                    <button class="tab-btn active" onclick="switchTab('login')">CONNEXION</button>
-                    <button class="tab-btn" onclick="switchTab('register')">Inscription</button>
+                    <button class="tab-btn active" onclick="switchTab('login')" data-i18n="auth.login_tab">CONNEXION</button>
+                    <button class="tab-btn" onclick="switchTab('register')" data-i18n="auth.register_tab">Inscription</button>
                 </div>
                 
                 <!-- Login Tab -->
                 <div id="login-tab" class="tab-content active">
                     <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" id="login-email" class="form-input" placeholder="votre@email.com">
+                        <label class="form-label" data-i18n="auth.email_label">Email</label>
+                        <input type="email" id="login-email" class="form-input" data-i18n-placeholder="auth.email" placeholder="votre@email.com">
                         <div id="login-email-error" class="error-message"></div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Mot de passe</label>
-                        <input type="password" id="login-password" class="form-input" placeholder="password">
+                        <label class="form-label" data-i18n="auth.password_label">Mot de passe</label>
+                        <input type="password" id="login-password" class="form-input" data-i18n-placeholder="auth.password" placeholder="Mot de passe">
                         <div id="login-password-error" class="error-message"></div>
                     </div>
                     <div id="login-error" class="error-message mb-4"></div>
-                    <button id="login-btn" onclick="handleLogin()" class="w-full btn-primary px-4 py-3 rounded-lg font-semibold">Se connecter</button>
+                    <button id="login-btn" onclick="handleLogin()" class="w-full btn-primary px-4 py-3 rounded-lg font-semibold" data-i18n="auth.login_button">Se connecter</button>
                     
                     <div class="relative my-6">
                         <div class="absolute inset-0 flex items-center">
                             <div class="w-full border-t border-gray-700"></div>
                         </div>
                         <div class="relative flex justify-center text-sm">
-                            <span class="px-2 bg-gray-800 text-gray-400">ou</span>
+                            <span class="px-2 bg-gray-800 text-gray-400" data-i18n="auth.or_divider">ou</span>
                         </div>
                     </div>
                     
@@ -303,41 +323,41 @@
                             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                         </svg>
-                        Se connecter avec Google
+                        <span data-i18n="auth.google_login">Se connecter avec Google</span>
                     </button>
                 </div>
                 
                 <!-- Register Tab -->
                 <div id="register-tab" class="tab-content">
                     <div class="form-group">
-                        <label class="form-label">Nom d'utilisateur</label>
-                        <input type="text" id="register-username" class="form-input" placeholder="mon_pseudo">
+                        <label class="form-label" data-i18n="auth.username_label">Nom d'utilisateur</label>
+                        <input type="text" id="register-username" class="form-input" data-i18n-placeholder="auth.username" placeholder="mon_pseudo">
                         <div id="register-username-error" class="error-message"></div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" id="register-email" class="form-input" placeholder="votre@email.com">
+                        <label class="form-label" data-i18n="auth.email_label">Email</label>
+                        <input type="email" id="register-email" class="form-input" data-i18n-placeholder="auth.email" placeholder="votre@email.com">
                         <div id="register-email-error" class="error-message"></div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Mot de passe</label>
-                        <input type="password" id="register-password" class="form-input" placeholder="password">
+                        <label class="form-label" data-i18n="auth.password_label">Mot de passe</label>
+                        <input type="password" id="register-password" class="form-input" data-i18n-placeholder="auth.password" placeholder="Mot de passe">
                         <div id="register-password-error" class="error-message"></div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Confirmer le mot de passe</label>
-                        <input type="password" id="register-confirm" class="form-input" placeholder="password">
+                        <label class="form-label" data-i18n="auth.confirm_password_label">Confirmer le mot de passe</label>
+                        <input type="password" id="register-confirm" class="form-input" data-i18n-placeholder="auth.confirm_password" placeholder="Confirmation">
                         <div id="register-confirm-error" class="error-message"></div>
                     </div>
                     <div id="register-error" class="error-message mb-4"></div>
-                    <button id="register-btn" onclick="handleRegister()" class="w-full btn-primary px-4 py-3 rounded-lg font-semibold">S'inscrire</button>
+                    <button id="register-btn" onclick="handleRegister()" class="w-full btn-primary px-4 py-3 rounded-lg font-semibold" data-i18n="auth.register_button">S'inscrire</button>
                     
                     <div class="relative my-6">
                         <div class="absolute inset-0 flex items-center">
                             <div class="w-full border-t border-gray-700"></div>
                         </div>
                         <div class="relative flex justify-center text-sm">
-                            <span class="px-2 bg-gray-800 text-gray-400">ou</span>
+                            <span class="px-2 bg-gray-800 text-gray-400" data-i18n="auth.or_divider">ou</span>
                         </div>
                     </div>
                     
@@ -348,7 +368,7 @@
                             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                         </svg>
-                        S'inscrire avec Google
+                        <span data-i18n="auth.google_register">S'inscrire avec Google</span>
                     </button>
                 </div>
             </div>
@@ -1011,6 +1031,20 @@
             }
             
             tryRenderCars();
+
+            // Listener pour les changements de langue
+            window.addEventListener('languageChanged', function(event) {
+                // Re-rendre les produits avec la nouvelle langue
+                let subcatsToUse = [];
+                if (activeCarTag === 'police') {
+                    subcatsToUse = activePoliceSubcategories;
+                } else if (activeCarTag === 'ambulance') {
+                    subcatsToUse = activeAmbulanceSubcategories;
+                } else if (activeCarTag === 'seasonal') {
+                    subcatsToUse = activeSeasonalSubcategories;
+                }
+                renderCarsByTag(activeCarTag, subcatsToUse);
+            });
         });
 
         // Fermer le menu si on clique ailleurs
@@ -1027,6 +1061,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 

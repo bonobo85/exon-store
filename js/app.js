@@ -36,7 +36,7 @@ function enforceAdminPageAccess() {
     const isAdminPage = path.endsWith('/admin.html') || path.endsWith('admin.html');
     if (!isAdminPage) return;
     if (isCurrentUserAdmin()) return;
-    window.location.href = 'index.html';
+    window.location.href = withLanguageParam('index.html', getCurrentLanguage());
 }
 
 function loadLocalUsers() {
@@ -95,59 +95,59 @@ function ensureCommerceUI() {
         <div class="modal-content max-w-md auth-modal-content">
             <div class="modal-header auth-modal-header">
                 <div>
-                    <p class="auth-kicker">Espace membre</p>
-                    <h2 class="font-display text-2xl font-bold text-white">Connexion / Inscription</h2>
+                    <p class="auth-kicker" data-i18n="auth.member_space">Espace membre</p>
+                    <h2 class="font-display text-2xl font-bold text-white" data-i18n="auth.title">Connexion / Inscription</h2>
                 </div>
-                <button onclick="closeModal('auth-modal')" class="auth-close-btn" aria-label="Fermer la fenêtre d'authentification">X</button>
+                <button onclick="closeModal('auth-modal')" class="auth-close-btn" data-i18n-aria="auth.close_aria" aria-label="Fermer la fenêtre d'authentification">X</button>
             </div>
             <div class="modal-body auth-modal-body">
                 <div class="auth-modal-hero">
-                    <p class="auth-hero-title">Rejoins Exon Store</p>
-                    <p class="auth-hero-subtitle">Accède à ton profil, ton historique et finalise tes commandes en un clic.</p>
+                    <p class="auth-hero-title" data-i18n="auth.hero_title">Rejoins Exon Store</p>
+                    <p class="auth-hero-subtitle" data-i18n="auth.hero_subtitle">Accède à ton profil, ton historique et finalise tes commandes en un clic.</p>
                 </div>
                 <div class="tabs auth-tabs">
-                    <button class="tab-btn auth-tab-btn active" data-tab="login" onclick="switchTab('login')">Connexion</button>
-                    <button class="tab-btn auth-tab-btn" data-tab="register" onclick="switchTab('register')">Inscription</button>
+                    <button class="tab-btn auth-tab-btn active" data-tab="login" onclick="switchTab('login')" data-i18n="auth.login_tab">Connexion</button>
+                    <button class="tab-btn auth-tab-btn" data-tab="register" onclick="switchTab('register')" data-i18n="auth.register_tab">Inscription</button>
                 </div>
                 <div id="login-tab" class="tab-content auth-tab-content active">
                     <div class="form-group auth-form-group">
-                        <label class="form-label auth-form-label">Email</label>
-                        <input type="email" id="login-email" class="form-input auth-input" placeholder="votre@email.com" autocomplete="email">
+                        <label class="form-label auth-form-label" data-i18n="auth.email_label">Email</label>
+                        <input type="email" id="login-email" class="form-input auth-input" data-i18n-placeholder="auth.email" placeholder="votre@email.com" autocomplete="email">
                         <div id="login-email-error" class="error-message"></div>
                     </div>
                     <div class="form-group auth-form-group">
-                        <label class="form-label auth-form-label">Mot de passe</label>
-                        <input type="password" id="login-password" class="form-input auth-input" placeholder="Mot de passe" autocomplete="current-password">
+                        <label class="form-label auth-form-label" data-i18n="auth.password_label">Mot de passe</label>
+                        <input type="password" id="login-password" class="form-input auth-input" data-i18n-placeholder="auth.password" placeholder="Mot de passe" autocomplete="current-password">
                         <div id="login-password-error" class="error-message"></div>
                     </div>
                     <div id="login-error" class="error-message mb-4"></div>
-                    <button id="login-btn" onclick="handleLogin()" class="w-full btn-primary px-4 py-3 rounded-lg font-semibold auth-submit-btn">Se connecter</button>
-                    <div class="auth-divider"><span>ou</span></div>
-                    <button type="button" class="w-full auth-google-btn" onclick="if (window.handleGoogleLogin) window.handleGoogleLogin();">Continuer avec Google</button>
+                    <button id="login-btn" onclick="handleLogin()" class="w-full btn-primary px-4 py-3 rounded-lg font-semibold auth-submit-btn" data-i18n="auth.login_button">Se connecter</button>
+                    <div class="auth-divider"><span data-i18n="auth.or_divider">ou</span></div>
+                    <button type="button" class="w-full auth-google-btn" onclick="if (window.handleGoogleLogin) window.handleGoogleLogin();" data-i18n="auth.google_login">Se connecter avec Google</button>
                 </div>
                 <div id="register-tab" class="tab-content auth-tab-content">
                     <div class="form-group auth-form-group">
-                        <label class="form-label auth-form-label">Nom d'utilisateur</label>
-                        <input type="text" id="register-username" class="form-input auth-input" placeholder="mon_pseudo" autocomplete="username">
+                        <label class="form-label auth-form-label" data-i18n="auth.username_label">Nom d'utilisateur</label>
+                        <input type="text" id="register-username" class="form-input auth-input" data-i18n-placeholder="auth.username" placeholder="mon_pseudo" autocomplete="username">
                         <div id="register-username-error" class="error-message"></div>
                     </div>
                     <div class="form-group auth-form-group">
-                        <label class="form-label auth-form-label">Email</label>
-                        <input type="email" id="register-email" class="form-input auth-input" placeholder="votre@email.com" autocomplete="email">
+                        <label class="form-label auth-form-label" data-i18n="auth.email_label">Email</label>
+                        <input type="email" id="register-email" class="form-input auth-input" data-i18n-placeholder="auth.email" placeholder="votre@email.com" autocomplete="email">
                         <div id="register-email-error" class="error-message"></div>
                     </div>
                     <div class="form-group auth-form-group">
-                        <label class="form-label auth-form-label">Mot de passe</label>
-                        <input type="password" id="register-password" class="form-input auth-input" placeholder="Mot de passe" autocomplete="new-password">
+                        <label class="form-label auth-form-label" data-i18n="auth.password_label">Mot de passe</label>
+                        <input type="password" id="register-password" class="form-input auth-input" data-i18n-placeholder="auth.password" placeholder="Mot de passe" autocomplete="new-password">
                         <div id="register-password-error" class="error-message"></div>
                     </div>
                     <div class="form-group auth-form-group">
-                        <label class="form-label auth-form-label">Confirmer le mot de passe</label>
-                        <input type="password" id="register-confirm" class="form-input auth-input" placeholder="Confirmation" autocomplete="new-password">
+                        <label class="form-label auth-form-label" data-i18n="auth.confirm_password_label">Confirmer le mot de passe</label>
+                        <input type="password" id="register-confirm" class="form-input auth-input" data-i18n-placeholder="auth.confirm_password" placeholder="Confirmation" autocomplete="new-password">
                         <div id="register-confirm-error" class="error-message"></div>
                     </div>
                     <div id="register-error" class="error-message mb-4"></div>
-                    <button id="register-btn" onclick="handleRegister()" class="w-full btn-primary px-4 py-3 rounded-lg font-semibold auth-submit-btn">S'inscrire</button>
+                    <button id="register-btn" onclick="handleRegister()" class="w-full btn-primary px-4 py-3 rounded-lg font-semibold auth-submit-btn" data-i18n="auth.register_button">S'inscrire</button>
                 </div>
             </div>
         </div>
@@ -380,21 +380,36 @@ async function restoreSessionFromServer() {
 
 // ==================== PRODUCT RENDERING ====================
 
-function createProductCard(product) {
-    const isFreeProduct = Number(product.price) === 0;
-    const priceHTML = product.originalPrice 
-        ? `<div><span class="font-display text-lg font-bold text-white">${isFreeProduct ? 'GRATUIT' : product.price + ' EUR'}</span> <span class="text-xs text-gray-500 line-through ml-2">${product.originalPrice} EUR</span></div>`
-        : `<span class="font-display text-lg font-bold text-white">${isFreeProduct ? 'GRATUIT' : product.price + ' EUR'}</span>`;
+function getLocalizedProductData(product) {
+    if (!product) return product;
+    if (typeof localizeProduct === 'function') {
+        return localizeProduct(product, getCurrentLanguage());
+    }
+    return product;
+}
 
-    const badgeHTML = product.badge 
-        ? `<div class="absolute top-3 left-3"><span class="px-3 py-1 rounded-full text-xs font-bold ${product.badgeClass}">${product.badge}</span></div>`
+function langText(frText, enText) {
+    return getCurrentLanguage() === 'en' ? enText : frText;
+}
+
+function createProductCard(product) {
+    const localizedProduct = getLocalizedProductData(product);
+    const isFreeProduct = Number(localizedProduct.price) === 0;
+    const freeLabel = langText('GRATUIT', 'FREE');
+    const viewLabel = t('cart.view_details') !== 'cart.view_details' ? t('cart.view_details') : langText('Voir', 'View');
+    const priceHTML = localizedProduct.originalPrice
+        ? `<div><span class="font-display text-lg font-bold text-white">${isFreeProduct ? freeLabel : localizedProduct.price + ' EUR'}</span> <span class="text-xs text-gray-500 line-through ml-2">${localizedProduct.originalPrice} EUR</span></div>`
+        : `<span class="font-display text-lg font-bold text-white">${isFreeProduct ? freeLabel : localizedProduct.price + ' EUR'}</span>`;
+
+    const badgeHTML = localizedProduct.badge
+        ? `<div class="absolute top-3 left-3"><span class="px-3 py-1 rounded-full text-xs font-bold ${localizedProduct.badgeClass}">${localizedProduct.badge}</span></div>`
         : '';
 
     const card = document.createElement('div');
     card.className = 'gradient-border rounded-2xl overflow-hidden card-hover group cursor-pointer';
     card.onclick = () => viewProduct(product.id);
     card.innerHTML = `
-        <div class="aspect-video bg-gradient-to-br ${product.gradientFrom} ${product.gradientTo} relative overflow-hidden">
+        <div class="aspect-video bg-gradient-to-br ${localizedProduct.gradientFrom} ${localizedProduct.gradientTo} relative overflow-hidden">
             <div class="absolute inset-0 flex items-center justify-center">
                 <svg class="w-16 h-16 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 6l-3.5 5h3.5M10 6l3.5 5H10m6-5l-3.5 5h3.5m-6.5 6l3 2H3l3-2m12 0l3 2h-6.5l3-2m-12 0v-2a2 2 0 012-2h12a2 2 0 012 2v2m-16 0h16" />
@@ -403,13 +418,13 @@ function createProductCard(product) {
             ${badgeHTML}
         </div>
         <div class="p-5">
-            <h3 class="font-bold text-white mb-1 group-hover:text-gray-200 transition-colors">${product.title}</h3>
-            <p class="text-xs text-gray-500 uppercase tracking-wider mb-2">${product.subtitle}</p>
-            <p class="text-sm text-gray-400 mb-2 line-clamp-3">${product.description}</p>
-            ${getProductMetaText(product) ? `<p class="text-xs text-gray-500 mb-4">${getProductMetaText(product)}</p>` : ''}
+            <h3 class="font-bold text-white mb-1 group-hover:text-gray-200 transition-colors">${localizedProduct.title}</h3>
+            <p class="text-xs text-gray-500 uppercase tracking-wider mb-2">${localizedProduct.subtitle || ''}</p>
+            <p class="text-sm text-gray-400 mb-2 line-clamp-3">${localizedProduct.description || ''}</p>
+            ${getProductMetaText(localizedProduct) ? `<p class="text-xs text-gray-500 mb-4">${getProductMetaText(localizedProduct)}</p>` : ''}
             <div class="flex items-center justify-between">
                 ${priceHTML}
-                <button onclick="event.stopPropagation(); viewProduct('${product.id}')" class="btn-primary px-4 py-2 rounded-lg text-sm font-semibold">Voir</button>
+                <button onclick="event.stopPropagation(); viewProduct('${product.id}')" class="btn-primary px-4 py-2 rounded-lg text-sm font-semibold">${viewLabel}</button>
             </div>
         </div>
     `;
@@ -482,8 +497,10 @@ function renderProductBubble(product) {
     const bubble = document.createElement('a');
     bubble.className = 'product-bubble-link';
     bubble.href = getProductCategoryLink(product.category);
-    bubble.textContent = 'Voir la categorie';
-    bubble.setAttribute('aria-label', `Voir la categorie ${product.category || 'produits'}`);
+    const categoryLabel = t('products.view_category') !== 'products.view_category' ? t('products.view_category') : langText('Voir la categorie', 'View category');
+    const productsLabel = langText('produits', 'products');
+    bubble.textContent = categoryLabel;
+    bubble.setAttribute('aria-label', `${categoryLabel} ${product.category || productsLabel}`);
     imageContainer.appendChild(bubble);
 
     let bubbleSize = Math.max(84, Math.min(Math.floor(imageContainer.clientWidth * 0.36), 124));
@@ -543,7 +560,7 @@ function viewProduct(productId) {
     if (!product) return;
 
     // Redirect to product detail page
-    window.location.href = `product-detail.html?id=${product.id}&category=${product.category}`;
+    window.location.href = withLanguageParam(`product-detail.html?id=${product.id}&category=${product.category}`, getCurrentLanguage());
 }
 
 function addToCartFromModal(event) {
@@ -586,7 +603,7 @@ function animateAddToCart(product, startEl) {
     flyer.className = 'flyer-card slide-in';
     
     // Get product image
-    const productImage = product.images && product.images.length > 0 ? product.images[0] : 'https://i.postimg.cc/VLx43RYB/exon.png';
+    const productImage = product.images && product.images.length > 0 ? product.images[0] : 'https://i.postimg.cc/QNb0H6FR/exon.png';
     
     // Build card content
     flyer.innerHTML = `
@@ -846,7 +863,7 @@ function updateCartUI() {
 
     const cartSummaryCount = document.getElementById('cart-summary-count');
     if (cartSummaryCount) {
-        const label = count > 1 ? 'articles' : 'article';
+        const label = count > 1 ? langText('articles', 'items') : langText('article', 'item');
         cartSummaryCount.textContent = `${count} ${label}`;
     }
 
@@ -869,9 +886,9 @@ function updateCartUI() {
     const checkoutBtn = document.getElementById('checkout-btn');
     if (checkoutBtn) {
         if (!currentUser) {
-            checkoutBtn.textContent = 'Se connecter pour payer';
+            checkoutBtn.textContent = langText('Se connecter pour payer', 'Log in to checkout');
         } else {
-            checkoutBtn.textContent = 'Passer la commande';
+            checkoutBtn.textContent = langText('Passer la commande', 'Place order');
         }
         // disable if cart empty
         checkoutBtn.disabled = cartItems.length === 0;
@@ -900,32 +917,33 @@ function renderCartItems() {
     }
 
     if (cartItems.length === 0) {
-        container.innerHTML = '<p class="text-gray-400 text-center py-8">Votre panier est vide</p>';
+        container.innerHTML = `<p class="text-gray-400 text-center py-8">${langText('Votre panier est vide', 'Your cart is empty')}</p>`;
         return;
     }
 
     if (isCartPageLayout) {
         container.innerHTML = cartItems.map((item, index) => {
+            const localizedItem = getLocalizedProductData(item);
             const unitPrice = Number(item.price) || 0;
             const lineTotal = unitPrice * item.quantity;
-            const image = item.images && item.images.length > 0 ? item.images[0] : 'https://i.postimg.cc/W1sN31dJ/exon.png';
+            const image = item.images && item.images.length > 0 ? item.images[0] : 'https://i.postimg.cc/QNb0H6FR/exon.png';
             const isUpdated = cartItemChangePulseId === item.cartId;
             return `
                 <article class="cart-page-item ${isUpdated ? 'cart-item-updated' : ''}" data-cart-id="${item.cartId}" style="--cart-stagger:${index * 70}ms;">
-                    <img src="${image}" alt="${item.title}" class="cart-page-thumb" onerror="this.src='https://i.postimg.cc/W1sN31dJ/exon.png'">
+                    <img src="${image}" alt="${localizedItem.title}" class="cart-page-thumb" onerror="this.src='https://i.postimg.cc/QNb0H6FR/exon.png'">
                     <div class="cart-page-item-info">
-                        <p class="cart-page-item-title">${item.title}</p>
-                        <p class="cart-page-item-subtitle">${item.subtitle || 'Ressource premium Exon'}</p>
-                        <p class="cart-page-item-price">${unitPrice === 0 ? 'GRATUIT' : unitPrice.toFixed(2) + ' EUR'}</p>
+                        <p class="cart-page-item-title">${localizedItem.title}</p>
+                        <p class="cart-page-item-subtitle">${localizedItem.subtitle || langText('Ressource premium Exon', 'Exon premium resource')}</p>
+                        <p class="cart-page-item-price">${unitPrice === 0 ? langText('GRATUIT', 'FREE') : unitPrice.toFixed(2) + ' EUR'}</p>
                     </div>
                     <div class="cart-page-item-actions">
                         <div class="cart-page-qty">
-                            <button onclick="updateQuantity('${item.cartId}', ${item.quantity - 1})" aria-label="Diminuer la quantite">-</button>
+                            <button onclick="updateQuantity('${item.cartId}', ${item.quantity - 1})" aria-label="${langText('Diminuer la quantite', 'Decrease quantity')}">-</button>
                             <span>${item.quantity}</span>
-                            <button onclick="updateQuantity('${item.cartId}', ${item.quantity + 1})" aria-label="Augmenter la quantite">+</button>
+                            <button onclick="updateQuantity('${item.cartId}', ${item.quantity + 1})" aria-label="${langText('Augmenter la quantite', 'Increase quantity')}">+</button>
                         </div>
                         <p class="cart-page-line-total">${lineTotal.toFixed(2)} EUR</p>
-                        <button onclick="removeFromCart('${item.cartId}')" class="cart-page-remove">Supprimer</button>
+                        <button onclick="removeFromCart('${item.cartId}')" class="cart-page-remove">${langText('Supprimer', 'Remove')}</button>
                     </div>
                 </article>
             `;
@@ -935,20 +953,23 @@ function renderCartItems() {
         return;
     }
 
-    container.innerHTML = cartItems.map(item => `
+    container.innerHTML = cartItems.map(item => {
+        const localizedItem = getLocalizedProductData(item);
+        return `
         <div class="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/10">
             <div class="flex-1">
-                <p class="text-white font-semibold text-sm">${item.title}</p>
-                <p class="text-gray-400 text-xs">${Number(item.price) === 0 ? 'GRATUIT' : item.price + ' EUR'} x ${item.quantity}</p>
+                <p class="text-white font-semibold text-sm">${localizedItem.title}</p>
+                <p class="text-gray-400 text-xs">${Number(item.price) === 0 ? langText('GRATUIT', 'FREE') : item.price + ' EUR'} x ${item.quantity}</p>
             </div>
             <div class="flex items-center gap-2">
                 <button onclick="updateQuantity('${item.cartId}', ${item.quantity - 1})" class="px-2 py-1 text-gray-400 hover:text-white">-</button>
                 <span class="text-white font-semibold w-6 text-center">${item.quantity}</span>
                 <button onclick="updateQuantity('${item.cartId}', ${item.quantity + 1})" class="px-2 py-1 text-gray-400 hover:text-white">+</button>
-                <button onclick="removeFromCart('${item.cartId}')" class="ml-2 px-2 py-1 text-red-400 hover:text-red-300">Supprimer</button>
+                <button onclick="removeFromCart('${item.cartId}')" class="ml-2 px-2 py-1 text-red-400 hover:text-red-300">${langText('Supprimer', 'Remove')}</button>
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 // ==================== PROMO CODES ====================
@@ -962,16 +983,16 @@ function applyPromo() {
     messageDiv.innerHTML = '';
 
     if (!code) {
-        messageDiv.innerHTML = '<div class="error-message">Veuillez entrer un code promo</div>';
+        messageDiv.innerHTML = `<div class="error-message">${langText('Veuillez entrer un code promo', 'Please enter a promo code')}</div>`;
         return;
     }
 
     if (promoCodes[code]) {
         currentPromo = { code, discount: promoCodes[code] };
-        messageDiv.innerHTML = `<div class="success-message">Code promo appliqué ! ${Math.round(promoCodes[code] * 100)}% de réduction</div>`;
+        messageDiv.innerHTML = `<div class="success-message">${langText('Code promo applique !', 'Promo code applied!')} ${Math.round(promoCodes[code] * 100)}% ${langText('de reduction', 'off')}</div>`;
         calculateTotals();
     } else {
-        messageDiv.innerHTML = '<div class="error-message">Code promo invalide</div>';
+        messageDiv.innerHTML = `<div class="error-message">${langText('Code promo invalide', 'Invalid promo code')}</div>`;
     }
 }
 
@@ -1007,7 +1028,7 @@ function calculateTotals() {
 
 function showPayment() {
     if (cartItems.length === 0) {
-        showToast('Votre panier est vide');
+        showToast(langText('Votre panier est vide', 'Your cart is empty'));
         return;
     }
     // require authentication before performing the final payment
@@ -1026,7 +1047,7 @@ function showPayment() {
     const paymentAmount = document.getElementById('payment-amount');
     const paymentModal = document.getElementById('payment-modal');
     if (!paymentAmount || !paymentModal) {
-        showToast('Le formulaire de paiement est indisponible sur cette page');
+        showToast(langText('Le formulaire de paiement est indisponible sur cette page', 'Payment form is unavailable on this page'));
         return;
     }
 
@@ -1048,7 +1069,7 @@ function completePurchase() {
         total: (subtotal - discount).toFixed(2),
         date: new Date().toISOString(),
         promoCode: currentPromo ? currentPromo.code : null,
-        paymentMethod: 'Commande directe'
+        paymentMethod: langText('Commande directe', 'Direct order')
     };
     
     purchaseHistory.push(purchase);
@@ -1065,7 +1086,7 @@ function completePurchase() {
     updateCartInDB();
     
     closeModal('payment-modal');
-    showToast('Commande validee. Merci pour votre achat!');
+    showToast(langText('Commande validee. Merci pour votre achat!', 'Order confirmed. Thank you for your purchase!'));
     renderPurchaseHistory();
 }
 
@@ -1075,7 +1096,7 @@ function renderPurchaseHistory() {
     const container = document.getElementById('history-items');
 
     if (purchaseHistory.length === 0) {
-        container.innerHTML = '<p class="text-gray-400 text-center py-8">Aucun historique d\'achat</p>';
+        container.innerHTML = `<p class="text-gray-400 text-center py-8">${langText('Aucun historique d\'achat', 'No purchase history')}</p>`;
         return;
     }
 
@@ -1109,11 +1130,11 @@ async function handleLogin() {
     clearErrorMessages();
 
     if (!email) {
-        document.getElementById('login-email-error').textContent = 'Email requis';
+        document.getElementById('login-email-error').textContent = t('auth.email_required');
         return;
     }
     if (!password) {
-        document.getElementById('login-password-error').textContent = 'Mot de passe requis';
+        document.getElementById('login-password-error').textContent = t('auth.password_required');
         return;
     }
 
@@ -1160,7 +1181,8 @@ async function handleLogin() {
 
             updateAuthUI();
             closeModal('auth-modal');
-            showToast(`Bienvenue ${user.username}!`);
+            const welcomeText = getCurrentLanguage() === 'en' ? `Welcome ${user.username}!` : `Bienvenue ${user.username}!`;
+            showToast(welcomeText);
             if (pendingCheckout) {
                 pendingCheckout = false;
                 showPayment();
@@ -1173,12 +1195,12 @@ async function handleLogin() {
                 err = null;
             }
             if (err && err.error === 'no_account') {
-                document.getElementById('login-error').textContent = 'Aucun compte avec cet email. Inscrivez-vous.';
+                document.getElementById('login-error').textContent = t('auth.no_account');
                 const registerEmail = document.getElementById('register-email');
                 if (registerEmail) registerEmail.value = email;
                 switchTab('register');
             } else {
-                document.getElementById('login-error').textContent = 'Connexion échouée : email/nom d\'utilisateur ou mot de passe incorrect.';
+                document.getElementById('login-error').textContent = t('auth.login_failed');
             }
         }
     } catch (e) {
@@ -1217,19 +1239,20 @@ async function handleLogin() {
 
             updateAuthUI();
             closeModal('auth-modal');
-            showToast(`Bienvenue ${user.username}! (mode hors ligne)`);
+            const offlineWelcome = getCurrentLanguage() === 'en' ? `Welcome ${user.username}! (offline mode)` : `Bienvenue ${user.username}! (mode hors ligne)`;
+            showToast(offlineWelcome);
             if (pendingCheckout) {
                 pendingCheckout = false;
                 showPayment();
             }
         } else {
             if (!account) {
-                document.getElementById('login-error').textContent = 'Aucun compte avec cet email. Inscrivez-vous.';
+                document.getElementById('login-error').textContent = t('auth.no_account');
                 const registerEmail = document.getElementById('register-email');
                 if (registerEmail) registerEmail.value = email;
                 switchTab('register');
             } else {
-                document.getElementById('login-error').textContent = 'Connexion échouée : mot de passe incorrect.';
+                document.getElementById('login-error').textContent = t('auth.login_wrong_password');
             }
         }
     }
@@ -1244,19 +1267,19 @@ async function handleRegister() {
     clearErrorMessages();
 
     if (!username) {
-        document.getElementById('register-username-error').textContent = 'Nom d\'utilisateur requis';
+        document.getElementById('register-username-error').textContent = t('auth.username_required');
         return;
     }
     if (!email) {
-        document.getElementById('register-email-error').textContent = 'Email requis';
+        document.getElementById('register-email-error').textContent = t('auth.email_required');
         return;
     }
     if (!password) {
-        document.getElementById('register-password-error').textContent = 'Mot de passe requis';
+        document.getElementById('register-password-error').textContent = t('auth.password_required');
         return;
     }
     if (password !== confirm) {
-        document.getElementById('register-confirm-error').textContent = 'Les mots de passe ne correspondent pas';
+        document.getElementById('register-confirm-error').textContent = t('auth.password_mismatch');
         return;
     }
 
@@ -1270,7 +1293,7 @@ async function handleRegister() {
             body: JSON.stringify({ username, email, password })
         });
         document.getElementById('register-btn').disabled = false;
-        document.getElementById('register-btn').innerHTML = 'S\'inscrire';
+        document.getElementById('register-btn').innerHTML = t('auth.register_button');
 
         if (res.ok) {
             const data = await res.json();
@@ -1288,7 +1311,7 @@ async function handleRegister() {
             updateCartUI();
             updateAuthUI();
             closeModal('auth-modal');
-            showToast('Inscription réussie !');
+            showToast(t('auth.register_success'));
         } else {
             let backendError = null;
             try {
@@ -1297,7 +1320,7 @@ async function handleRegister() {
                 backendError = null;
             }
             if (backendError && backendError.error === 'email_in_use') {
-                document.getElementById('register-error').textContent = 'Cet email est déjà utilisé';
+                document.getElementById('register-error').textContent = t('auth.email_in_use');
                 return;
             }
             throw new Error('backend_unavailable');
@@ -1305,7 +1328,7 @@ async function handleRegister() {
     } catch (e) {
         const exists = allUsers.find(u => u.email === email || u.username === username);
         if (exists) {
-            document.getElementById('register-error').textContent = 'Cet email ou nom d\'utilisateur est déjà utilisé';
+            document.getElementById('register-error').textContent = t('auth.email_or_username_in_use');
         } else {
             const newUser = {
                 userId: generateId(),
@@ -1324,10 +1347,10 @@ async function handleRegister() {
             updateCartUI();
             updateAuthUI();
             closeModal('auth-modal');
-            showToast('Inscription réussie ! (mode local)');
+            showToast(t('auth.register_success_local'));
         }
         document.getElementById('register-btn').disabled = false;
-        document.getElementById('register-btn').innerHTML = 'S\'inscrire';
+        document.getElementById('register-btn').innerHTML = t('auth.register_button');
     }
 }
 
@@ -1375,7 +1398,7 @@ function updateAuthUI() {
         }
     } else {
         if (authBtn) {
-            authBtn.textContent = 'CONNEXION';
+            authBtn.textContent = t('nav.connection');
             authBtn.onclick = showAuth;
             authBtn.classList.remove('hidden');
             authBtn.style.display = 'block';
@@ -1403,29 +1426,37 @@ function normalizeSearchText(value) {
 function performLiveSearch(query) {
     const searchTerm = normalizeSearchText(query);
     const allProds = getAllProducts();
-    const results = allProds.filter(product => 
-        normalizeSearchText(product.title).includes(searchTerm) ||
-        normalizeSearchText(product.subtitle).includes(searchTerm) ||
-        normalizeSearchText(product.description).includes(searchTerm)
+    const localizedProducts = allProds.map((product) => ({
+        base: product,
+        localized: getLocalizedProductData(product)
+    }));
+    const results = localizedProducts.filter((entry) =>
+        normalizeSearchText(entry.localized.title).includes(searchTerm) ||
+        normalizeSearchText(entry.localized.subtitle).includes(searchTerm) ||
+        normalizeSearchText(entry.localized.description).includes(searchTerm)
     ).slice(0, 8);
 
     const dropdown = document.getElementById('search-results-dropdown');
 
     if (results.length === 0) {
-        dropdown.innerHTML = '<div class="search-empty">Aucun produit trouvé</div>';
+        dropdown.innerHTML = `<div class="search-empty">${langText('Aucun produit trouve', 'No products found')}</div>`;
         dropdown.classList.add('active');
         return;
     }
 
-    dropdown.innerHTML = results.map(product => `
+    dropdown.innerHTML = results.map((entry) => {
+        const product = entry.base;
+        const localizedProduct = entry.localized;
+        return `
         <div class="search-result-item" onclick="viewProduct('${product.id}'); closeSearchDropdown();">
             <div class="search-result-content">
-                <div class="search-result-title">${product.title}</div>
-                <div class="search-result-category">${product.category}</div>
+                <div class="search-result-title">${localizedProduct.title}</div>
+                <div class="search-result-category">${localizedProduct.category}</div>
             </div>
             <div class="search-result-price">${product.price.toFixed(2)} EUR</div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 
     dropdown.classList.add('active');
 }
@@ -1453,7 +1484,7 @@ function showCart() {
         return;
     }
 
-    window.location.href = cartPath;
+    window.location.href = withLanguageParam(cartPath, getCurrentLanguage());
 }
 
 function showProfile() {
@@ -1563,10 +1594,317 @@ async function updateCartInDB() {
     }
 }
 
-// initialization and UI handlers
+// ==================== LANGUAGE MANAGEMENT ====================
+
+function getLanguageDisplayLabel(lang) {
+    return lang === 'en' ? 'EN' : 'FR';
+}
+
+function getLanguageFromQueryParam() {
+    const queryLang = new URLSearchParams(window.location.search).get('lang');
+    return queryLang === 'en' || queryLang === 'fr' ? queryLang : null;
+}
+
+function withLanguageParam(url, lang) {
+    const targetLang = lang === 'en' ? 'en' : 'fr';
+
+    try {
+        const parsed = new URL(url, window.location.href);
+        if (parsed.origin !== window.location.origin) {
+            return url;
+        }
+
+        parsed.searchParams.set('lang', targetLang);
+        return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+    } catch (error) {
+        return url;
+    }
+}
+
+function persistLanguageInInternalLinks(lang) {
+    const targetLang = lang === 'en' ? 'en' : 'fr';
+
+    document.querySelectorAll('a[href]').forEach((link) => {
+        const href = link.getAttribute('href');
+        if (!href) return;
+
+        const trimmedHref = href.trim();
+        if (
+            !trimmedHref ||
+            trimmedHref.startsWith('#') ||
+            trimmedHref.startsWith('mailto:') ||
+            trimmedHref.startsWith('tel:') ||
+            trimmedHref.toLowerCase().startsWith('javascript:')
+        ) {
+            return;
+        }
+
+        const localizedHref = withLanguageParam(trimmedHref, targetLang);
+        if (localizedHref !== trimmedHref) {
+            link.setAttribute('href', localizedHref);
+        }
+    });
+}
+
+function resolveInitialLanguage() {
+    const langFromUrl = getLanguageFromQueryParam();
+    if (langFromUrl) {
+        setLanguage(langFromUrl);
+        return langFromUrl;
+    }
+
+    return getCurrentLanguage();
+}
+
+function updateLanguageToggleLabel() {
+    const currentLang = getCurrentLanguage();
+    const label = getLanguageDisplayLabel(currentLang);
+
+    const directLabel = document.getElementById('language-toggle-label');
+    if (directLabel) {
+        directLabel.textContent = label;
+        return;
+    }
+
+    // Keep HTML changes minimal by upgrading the existing language button at runtime.
+    const langButton = document.querySelector('button[onclick="toggleLanguageMenu()"]');
+    if (!langButton) return;
+
+    langButton.innerHTML = `<span id="language-toggle-label" class="text-xs font-bold tracking-wider">${label}</span>`;
+}
+
+function buildStaticTextDictionary() {
+    const dictionary = { frToEn: {}, enToFr: {} };
+    const frPack = (typeof translations !== 'undefined' && translations.fr) ? translations.fr : {};
+    const enPack = (typeof translations !== 'undefined' && translations.en) ? translations.en : {};
+
+    Object.keys(frPack).forEach((key) => {
+        const frText = frPack[key];
+        const enText = enPack[key];
+        if (typeof frText !== 'string' || typeof enText !== 'string') return;
+        if (!frText.trim() || !enText.trim()) return;
+        dictionary.frToEn[frText.trim()] = enText;
+        dictionary.enToFr[enText.trim()] = frText;
+    });
+
+    return dictionary;
+}
+
+function translateStaticPageContent(lang) {
+    const dictionary = buildStaticTextDictionary();
+    const map = lang === 'en' ? dictionary.frToEn : dictionary.enToFr;
+    const forbiddenTags = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'CODE', 'PRE']);
+
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    let node = walker.nextNode();
+    while (node) {
+        const parentTag = node.parentElement ? node.parentElement.tagName : '';
+        if (!forbiddenTags.has(parentTag)) {
+            const raw = node.nodeValue || '';
+            const trimmed = raw.trim();
+            if (trimmed) {
+                let nextValue = raw;
+                if (Object.prototype.hasOwnProperty.call(map, trimmed)) {
+                    nextValue = raw.replace(trimmed, map[trimmed]);
+                }
+                if (typeof translateFreeText === 'function') {
+                    nextValue = translateFreeText(nextValue, lang);
+                }
+                if (nextValue !== raw) {
+                    node.nodeValue = nextValue;
+                }
+            }
+        }
+        node = walker.nextNode();
+    }
+
+    document.querySelectorAll('[placeholder],[title],[aria-label],[alt],[value]').forEach((el) => {
+        ['placeholder', 'title', 'aria-label', 'alt', 'value'].forEach((attr) => {
+            const value = el.getAttribute(attr);
+            if (!value) return;
+            const trimmed = value.trim();
+            if (!trimmed) return;
+            let nextValue = value;
+            if (Object.prototype.hasOwnProperty.call(map, trimmed)) {
+                nextValue = map[trimmed];
+            }
+            if (typeof translateFreeText === 'function') {
+                nextValue = translateFreeText(nextValue, lang);
+            }
+            if (nextValue !== value) {
+                el.setAttribute(attr, nextValue);
+            }
+        });
+    });
+}
+
+function updateDocumentTitleByLanguage(lang) {
+    const path = (window.location.pathname || '').toLowerCase();
+    if (path.endsWith('/cars.html') || path.endsWith('cars.html')) {
+        document.title = t('page.meta.cars');
+        return;
+    }
+    if (path.endsWith('/scripts.html') || path.endsWith('scripts.html')) {
+        document.title = t('page.meta.scripts');
+        return;
+    }
+    if (path.endsWith('/clothes.html') || path.endsWith('clothes.html')) {
+        document.title = t('page.meta.clothes');
+        return;
+    }
+    if (path.endsWith('/templates.html') || path.endsWith('templates.html')) {
+        document.title = t('page.meta.templates');
+        return;
+    }
+    if (path.endsWith('/product-detail.html') || path.endsWith('product-detail.html')) {
+        const pageTitle = document.getElementById('page-title');
+        if (pageTitle && !document.title.includes(' - Exon Store')) {
+            document.title = t('page.meta.product_detail');
+        }
+    }
+}
+
+// Toggle language menu visibility
+function toggleLanguageMenu() {
+    const menu = document.getElementById('language-menu');
+    if (menu) {
+        menu.classList.toggle('hidden');
+    }
+}
+
+// Switch to a specific language
+function switchLanguageTo(lang) {
+    const currentLang = getCurrentLanguage();
+    if (currentLang === lang) {
+        const menu = document.getElementById('language-menu');
+        if (menu) menu.classList.add('hidden');
+        updateLanguageMenuDisplay();
+        updateLanguageToggleLabel();
+        return;
+    }
+
+    switchLanguage(lang);
+    // Close the language menu
+    const menu = document.getElementById('language-menu');
+    if (menu) {
+        menu.classList.add('hidden');
+    }
+    // Update language menu highlights
+    updateLanguageMenuDisplay();
+    updateLanguageToggleLabel();
+
+    // Keep language explicit in URL and propagate to internal links.
+    persistLanguageInInternalLinks(lang);
+    window.location.href = withLanguageParam(window.location.href, lang);
+}
+
+// Update language menu to show current language
+function updateLanguageMenuDisplay() {
+    const currentLang = getCurrentLanguage();
+    const options = document.querySelectorAll('.language-option');
+    options.forEach(option => {
+        if (option.getAttribute('data-lang') === currentLang) {
+            option.classList.add('bg-white/20');
+        } else {
+            option.classList.remove('bg-white/20');
+        }
+    });
+}
+
+let languageRefreshRaf = null;
+
+function applyFullLanguageState(lang) {
+    const targetLang = lang === 'en' ? 'en' : 'fr';
+    document.documentElement.lang = targetLang;
+    translatePage();
+    translateStaticPageContent(targetLang);
+    updateNavigationTranslations(targetLang);
+    updateAuthUIText(targetLang);
+    updateLanguageMenuDisplay();
+    updateLanguageToggleLabel();
+    persistLanguageInInternalLinks(targetLang);
+    updateDocumentTitleByLanguage(targetLang);
+}
+
+function scheduleLanguageRefresh(lang) {
+    if (languageRefreshRaf !== null) {
+        cancelAnimationFrame(languageRefreshRaf);
+    }
+
+    languageRefreshRaf = requestAnimationFrame(() => {
+        languageRefreshRaf = null;
+        applyFullLanguageState(lang || getCurrentLanguage());
+    });
+}
+
+function setupLanguageMutationObserver() {
+    if (!document.body) return;
+
+    const observer = new MutationObserver(() => {
+        scheduleLanguageRefresh(getCurrentLanguage());
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['placeholder', 'title', 'aria-label', 'href']
+    });
+}
+
+// Initialize translations on page load
+function initializeTranslations() {
+    const currentLang = resolveInitialLanguage();
+    window.history.replaceState({}, '', withLanguageParam(window.location.href, currentLang));
+    applyFullLanguageState(currentLang);
+}
+
+// Listen for language changes and update content
+window.addEventListener('languageChanged', function(event) {
+    const lang = event.detail.language;
+    window.history.replaceState({}, '', withLanguageParam(window.location.href, lang));
+    applyFullLanguageState(lang);
+
+    // Update search placeholder
+    const searchInput = document.getElementById('search-input-nav');
+    if (searchInput) {
+        searchInput.placeholder = t('nav.search');
+    }
+});
+
+function updateNavigationTranslations(lang) {
+    const navLinks = document.querySelectorAll('.nav-link');
+    const navTexts = ['nav.home', 'nav.cars', 'nav.scripts', 'nav.clothes', 'nav.templates', 'nav.about'];
+    
+    navLinks.forEach((link, index) => {
+        if (navTexts[index]) {
+            link.textContent = t(navTexts[index]);
+        }
+    });
+}
+
+function updateAuthUIText(lang) {
+    const authBtn = document.getElementById('auth-btn');
+    const profileBtn = document.getElementById('profile-btn');
+    const authBtnMobile = document.getElementById('auth-btn-mobile');
+    const profileBtnMobile = document.getElementById('profile-btn-mobile');
+    
+    if (authBtn) authBtn.textContent = t('nav.connection');
+    if (profileBtn) profileBtn.textContent = t('nav.profile');
+    if (authBtnMobile) authBtnMobile.textContent = t('nav.connection');
+    if (profileBtnMobile) profileBtnMobile.textContent = t('nav.profile');
+}
+
+// ==================== INITIALIZATION AND UI HANDLERS ====================
 
 document.addEventListener('DOMContentLoaded', async function() {
+    // Initialize translations
+    initializeTranslations();
+    setupLanguageMutationObserver();
+    
     ensureCommerceUI();
+    // Commerce modals are injected dynamically, so enforce full language state after insertion too.
+    applyFullLanguageState(getCurrentLanguage());
     ensureProfileModalStructure();
     updateAdminVisibility();
 

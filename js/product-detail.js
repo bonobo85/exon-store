@@ -5,9 +5,21 @@ const galleryState = {
     currentIndex: 0
 };
 
-const DEFAULT_PRODUCT_IMAGE = 'https://i.postimg.cc/VLx43RYB/exon.png';
+const DEFAULT_PRODUCT_IMAGE = 'https://i.postimg.cc/QNb0H6FR/exon.png';
 const DEFAULT_SUPPORT_URL = 'https://discord.com/invite/c9cKtrwMrs';
 const DEFAULT_VIDEO_URL = 'https://www.youtube.com/@BonoboDesAlpes';
+
+function getLocalizedProductForDetail(product) {
+    if (!product) return product;
+    if (typeof localizeProduct === 'function') {
+        return localizeProduct(product, getCurrentLanguage());
+    }
+    return product;
+}
+
+function detailLangText(frText, enText) {
+    return getCurrentLanguage() === 'en' ? enText : frText;
+}
 
 // Get product ID from URL
 function getProductIdFromURL() {
@@ -30,7 +42,8 @@ function findProductById(productId, category) {
 // Go back to previous page
 function goBack() {
     const category = getCategoryFromURL();
-    window.location.href = `${category}.html`;
+    const lang = getCurrentLanguage() === 'en' ? 'en' : 'fr';
+    window.location.href = `${category}.html?lang=${lang}`;
 }
 
 // Display product details
@@ -52,51 +65,53 @@ function displayProductDetail() {
         return;
     }
 
+    const localizedProduct = getLocalizedProductForDetail(product);
+
     // Update page title
-    document.getElementById('page-title').textContent = `${product.title} - Exon Store`;
+    document.getElementById('page-title').textContent = `${localizedProduct.title} - Exon Store`;
     
     // Update product info
-    document.getElementById('product-title').textContent = product.title;
-    document.getElementById('product-subtitle').textContent = product.subtitle || product.description;
+    document.getElementById('product-title').textContent = localizedProduct.title;
+    document.getElementById('product-subtitle').textContent = localizedProduct.subtitle || localizedProduct.description;
     
     // Badge
     const badgeElement = document.getElementById('product-badge');
-    if (product.badge) {
-        badgeElement.textContent = product.badge;
-        badgeElement.className = `inline-block px-4 py-2 rounded-full text-sm font-semibold ${product.badgeClass || 'bg-blue-500 text-white'}`;
+    if (localizedProduct.badge) {
+        badgeElement.textContent = localizedProduct.badge;
+        badgeElement.className = `inline-block px-4 py-2 rounded-full text-sm font-semibold ${localizedProduct.badgeClass || 'bg-blue-500 text-white'}`;
     } else {
         badgeElement.style.display = 'none';
     }
 
     // Tags
-    displayTags(product);
+    displayTags(localizedProduct);
 
     // Price
-    document.getElementById('product-price').textContent = `${product.price.toFixed(2)} €`;
+    document.getElementById('product-price').textContent = `${localizedProduct.price.toFixed(2)} €`;
     
-    if (product.originalPrice) {
+    if (localizedProduct.originalPrice) {
         const originalPriceElement = document.getElementById('product-original-price');
-        originalPriceElement.textContent = `${product.originalPrice.toFixed(2)} €`;
+        originalPriceElement.textContent = `${localizedProduct.originalPrice.toFixed(2)} €`;
         originalPriceElement.classList.remove('hidden');
     }
 
     // Overview
-    document.getElementById('product-overview').textContent = product.details || product.description;
+    document.getElementById('product-overview').textContent = localizedProduct.details || localizedProduct.description;
 
     // Quick action buttons
-    displayQuickLinks(product);
+    displayQuickLinks(localizedProduct);
 
     // Gallery
-    displayGallery(product);
+    displayGallery(localizedProduct);
 
     // Features
-    displayFeatures(product);
+    displayFeatures(localizedProduct);
 
     // Technical Details
-    displayTechnicalDetails(product);
+    displayTechnicalDetails(localizedProduct);
 
     // Important Information
-    displayImportantInfo(product);
+    displayImportantInfo(localizedProduct);
 
     // Related Products
     displayRelatedProducts(product, category);
@@ -265,7 +280,7 @@ function displayFeatures(product) {
             featuresContainer.appendChild(featureDiv);
         });
     } else {
-        featuresContainer.innerHTML = '<p class="text-gray-400">Aucune caractéristique disponible.</p>';
+        featuresContainer.innerHTML = `<p class="text-gray-400">${detailLangText('Aucune caracteristique disponible.', 'No features available.')}</p>`;
     }
 }
 
@@ -296,7 +311,7 @@ function displayTechnicalDetails(product) {
             technicalContainer.appendChild(detailDiv);
         });
     } else {
-        technicalContainer.innerHTML = '<p class="text-gray-400 text-center py-4">Détails techniques disponibles bientôt</p>';
+        technicalContainer.innerHTML = `<p class="text-gray-400 text-center py-4">${detailLangText('Details techniques disponibles bientot', 'Technical details coming soon')}</p>`;
     }
 }
 
@@ -370,7 +385,7 @@ function displayImportantInfo(product) {
             infoContainer.appendChild(infoDiv);
         });
     } else {
-        infoContainer.innerHTML = '<p class="text-gray-400 text-center py-4">Informations complémentaires disponibles bientôt</p>';
+        infoContainer.innerHTML = `<p class="text-gray-400 text-center py-4">${detailLangText('Informations complementaires disponibles bientot', 'Additional information coming soon')}</p>`;
     }
 }
 
@@ -387,10 +402,12 @@ function displayRelatedProducts(product, category) {
         .slice(0, 3);
 
     relatedProducts.forEach(relatedProduct => {
+        const localizedRelated = getLocalizedProductForDetail(relatedProduct);
         const productCard = document.createElement('div');
         productCard.className = 'bg-gradient-to-br ' + (relatedProduct.gradientFrom || 'from-gray-900') + ' ' + (relatedProduct.gradientTo || 'to-black') + ' rounded-xl border border-white/10 overflow-hidden hover:border-white/30 transition-all cursor-pointer';
         productCard.onclick = () => {
-            window.location.href = `product-detail.html?id=${relatedProduct.id}&category=${category}`;
+            const lang = getCurrentLanguage() === 'en' ? 'en' : 'fr';
+            window.location.href = `product-detail.html?id=${relatedProduct.id}&category=${category}&lang=${lang}`;
         };
         
         productCard.innerHTML = `
@@ -400,11 +417,11 @@ function displayRelatedProducts(product, category) {
                 </svg>
             </div>
             <div class="p-6">
-                <h3 class="font-display text-xl font-bold text-white mb-2">${relatedProduct.title}</h3>
-                <p class="text-gray-400 text-sm mb-4">${relatedProduct.description}</p>
+                <h3 class="font-display text-xl font-bold text-white mb-2">${localizedRelated.title}</h3>
+                <p class="text-gray-400 text-sm mb-4">${localizedRelated.description}</p>
                 <div class="flex items-center justify-between">
                     <span class="font-display text-2xl font-bold text-white">${relatedProduct.price.toFixed(2)} €</span>
-                    <span class="btn-primary px-4 py-2 rounded-lg text-sm font-semibold">Voir</span>
+                    <span class="btn-primary px-4 py-2 rounded-lg text-sm font-semibold">${detailLangText('Voir', 'View')}</span>
                 </div>
             </div>
         `;
@@ -424,7 +441,7 @@ function addToCartFromDetail() {
         
         // Visual feedback
         const originalText = btn.textContent;
-        btn.textContent = '✓ AJOUTÉ AU PANIER';
+        btn.textContent = detailLangText('✓ AJOUTE AU PANIER', '✓ ADDED TO CART');
         btn.classList.add('bg-green-500');
         
         setTimeout(() => {
@@ -457,5 +474,9 @@ function openImageModal(imageSrc) {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
+    displayProductDetail();
+});
+
+window.addEventListener('languageChanged', () => {
     displayProductDetail();
 });
